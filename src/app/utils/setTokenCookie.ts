@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-interface ITokens {
+export interface ITokens {
   accessToken?: string;
   refreshToken?: string;
 }
