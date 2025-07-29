@@ -55,7 +55,7 @@ const userSchema = new Schema<IUser>(
       type: String,
     },
     address: addressSchema,
-    Role: {
+    role: {
       type: String,
       enum: Object.values(Role),
       required: true,
