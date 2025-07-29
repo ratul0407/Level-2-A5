@@ -1,0 +1,25 @@
+import z from "zod";
+import { Divisions, Role } from "./user.interface";
+
+export const createUserZod = z.object({
+  name: z.string({ error: "name must be string" }),
+  email: z.email({ error: "invalid email type" }),
+  password: z
+    .string({ error: "Password should be string" })
+    .min(8, { message: "minimum 8 characters is required" })
+    .max(36, { message: "maximum 36 characters are allowed" }),
+
+  picture: z.url().optional(),
+  role: z.enum(Object.values(Role)),
+  address: z
+    .object({
+      division: z.enum(Object.values(Divisions)),
+      city: z.string({ error: "city should be string" }),
+      zip: z
+        .number({ error: "zip code must be in number" })
+        .min(4, { message: "zip code must be of 4 digits" })
+        .max(4, { message: "zip code cannot be larger than 4 digits" }),
+      street: z.string({ error: "street should be string" }),
+    })
+    .optional(),
+});
