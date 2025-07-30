@@ -18,7 +18,7 @@ const authProviderScheme = new Schema<IAuthProvider>({
     required: true,
   },
 });
-const addressSchema = new Schema<IAddress>({
+export const addressSchema = new Schema<IAddress>({
   division: {
     type: String,
     enum: Object.values(Divisions),

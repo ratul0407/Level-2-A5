@@ -13,7 +13,7 @@ export enum Status {
   FAILED_DELIVERY = "FAILED_DELIVERY",
   RESCHEDULED = "RESCHEDULED",
 }
-export interface IStatus {
+export interface ITracking {
   status: Status;
   at: Date;
 }
@@ -24,9 +24,9 @@ export interface IParcel {
   senderLocation: IAddress;
   receiverLocation: IAddress;
   sameDivision: boolean;
-  senderEmail: string;
-  receiverEmail: string;
-  trackingEvents: IStatus[];
+  sender: Types.ObjectId;
+  receiver: Types.ObjectId;
+  trackingEvents: ITracking[];
   weight: number;
   estimatedDeliveryDate: Date;
   pickUpDate?: Date;
