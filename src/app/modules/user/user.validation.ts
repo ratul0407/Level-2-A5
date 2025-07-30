@@ -10,6 +10,13 @@ export const createUserZod = z.object({
     .max(36, { message: "maximum 36 characters are allowed" }),
 
   picture: z.url().optional(),
+  phone: z
+    .string({ error: "Phone number must be a string" })
+    .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
+      message:
+        "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+    })
+    .optional(),
   role: z.enum(Object.values(Role)),
   address: z
     .object({
@@ -37,6 +44,13 @@ export const updateUserZod = z.object({
         .min(1000, { message: "zip code must be of 4 digits" })
         .max(9999, { message: "zip code cannot be larger than 4 digits" }),
       street: z.string({ error: "street should be string" }),
+    })
+    .optional(),
+  phone: z
+    .string({ error: "Phone number must be a string" })
+    .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
+      message:
+        "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
     })
     .optional(),
 });

@@ -18,25 +18,28 @@ const authProviderScheme = new Schema<IAuthProvider>({
     required: true,
   },
 });
-export const addressSchema = new Schema<IAddress>({
-  division: {
-    type: String,
-    enum: Object.values(Divisions),
-    required: true,
+export const addressSchema = new Schema<IAddress>(
+  {
+    division: {
+      type: String,
+      enum: Object.values(Divisions),
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    zip: {
+      type: Number,
+      required: true,
+    },
+    street: {
+      type: String,
+      required: true,
+    },
   },
-  city: {
-    type: String,
-    required: true,
-  },
-  zip: {
-    type: Number,
-    required: true,
-  },
-  street: {
-    type: String,
-    required: true,
-  },
-});
+  { _id: false }
+);
 const userSchema = new Schema<IUser>(
   {
     name: {
@@ -49,6 +52,10 @@ const userSchema = new Schema<IUser>(
       required: true,
     },
     password: {
+      type: String,
+      required: true,
+    },
+    phone: {
       type: String,
       required: true,
     },
