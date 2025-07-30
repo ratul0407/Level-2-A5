@@ -21,8 +21,8 @@ const parcelSchema = new Schema<IParcel>(
       type: String,
       required: true,
     },
-    senderLocation: addressSchema,
-    receiverLocation: addressSchema,
+    senderInfo: addressSchema,
+    deliveryLocation: addressSchema,
     sameDivision: {
       type: Boolean,
       required: true,
@@ -68,5 +68,6 @@ parcelSchema.pre("save", async function (next) {
     .replace(/-g/, "")
     .substring(0, 12)}`;
   this.trackingId = trackingId;
+  next();
 });
 export const Parcel = model<IParcel>("Parcel", parcelSchema);

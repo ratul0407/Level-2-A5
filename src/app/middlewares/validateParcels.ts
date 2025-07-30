@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import { User } from "../modules/user/user.model";
 import { Role } from "../modules/user/user.interface";
@@ -6,7 +7,7 @@ import httpStatus from "http-status-codes";
 export const validateParcels =
   () => async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { sender, receiver, ...rest } = req.body;
+      const { sender, receiver } = req.body;
       const senderUser = await User.findById(sender);
 
       if (senderUser?.role !== Role.SENDER && senderUser?.role !== Role.ADMIN) {
@@ -37,6 +38,8 @@ export const validateParcels =
           "Please add your phone number to make a parcel request"
         );
       }
+      const senderInfo = senderUser.address;
+      (req as any).senderInfo = senderInfo;
       next();
     } catch (error) {
       console.log(error);

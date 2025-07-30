@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { ParcelService } from "./parcel.service";
@@ -5,7 +6,9 @@ import { sendResponse } from "../../utils/sendResponse";
 
 const createParcel = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await ParcelService.createParcel(req.body);
+    const location = req.senderInfo;
+    const payload = req.body;
+    const result = await ParcelService.createParcel(payload, location);
     sendResponse(res, {
       success: true,
       statusCode: 201,

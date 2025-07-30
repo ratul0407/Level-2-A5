@@ -24,12 +24,13 @@ export interface IParcel {
   sender: Types.ObjectId;
   receiver: Types.ObjectId;
   trackingEvents?: ITracking[];
-  senderLocation?: IAddress;
-  receiverLocation: IAddress;
+  senderInfo?: IAddress;
+  deliveryLocation: IAddress;
   sameDivision: boolean;
   weight: number;
   estimatedDeliveryDate?: Date;
   pickUpDate?: Date;
   deliveryDate?: Date;
   deliveryDriver?: Types.ObjectId;
+  cost?: number;
 }
