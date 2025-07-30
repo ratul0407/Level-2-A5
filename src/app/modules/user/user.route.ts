@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { UserController } from "./user.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { createUserZod } from "./user.validation";
+import { createUserZod, updateUserZod } from "./user.validation";
 
 const router = Router();
 
@@ -11,4 +11,5 @@ router.post(
   UserController.createUser
 );
 
+router.patch("/:id", validateRequest(updateUserZod), UserController.updateUser);
 export const UserRoutes = router;

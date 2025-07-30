@@ -23,6 +23,21 @@ const createUser = catchAsync(
   }
 );
 
+const updateUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const payload = req.body;
+    const decodedToken = req.user;
+    const result = await UserService.updateUser(id, payload, decodedToken);
+    sendResponse(res, {
+      success: true,
+      message: "User updated successfully!",
+      statusCode: 201,
+      data: result,
+    });
+  }
+);
 export const UserController = {
   createUser,
+  updateUser,
 };
