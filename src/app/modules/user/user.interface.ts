@@ -1,9 +1,10 @@
 import { Types } from "mongoose";
 
 export enum Role {
+  ADMIN = "ADMIN",
   SENDER = "SENDER",
   RECEIVER = "RECEIVER",
-  ADMIN = "ADMIN",
+  DELIVERY_PERSONNEL = "DELIVERY_PERSONNEL",
 }
 
 export enum IsActive {

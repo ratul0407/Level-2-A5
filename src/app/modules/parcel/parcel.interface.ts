@@ -21,12 +21,12 @@ export interface IParcel {
   _id?: string;
   trackingId: string;
   name: string;
-  senderLocation: IAddress;
-  receiverLocation: IAddress;
-  sameDivision: boolean;
   sender: Types.ObjectId;
   receiver: Types.ObjectId;
   trackingEvents: ITracking[];
+  senderLocation: IAddress;
+  receiverLocation: IAddress;
+  sameDivision: boolean;
   weight: number;
   estimatedDeliveryDate: Date;
   pickUpDate?: Date;
