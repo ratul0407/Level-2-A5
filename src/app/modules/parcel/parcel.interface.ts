@@ -19,16 +19,16 @@ export interface ITracking {
 }
 export interface IParcel {
   _id?: string;
-  trackingId: string;
+  trackingId?: string;
   name: string;
   sender: Types.ObjectId;
   receiver: Types.ObjectId;
-  trackingEvents: ITracking[];
-  senderLocation: IAddress;
+  trackingEvents?: ITracking[];
+  senderLocation?: IAddress;
   receiverLocation: IAddress;
   sameDivision: boolean;
   weight: number;
-  estimatedDeliveryDate: Date;
+  estimatedDeliveryDate?: Date;
   pickUpDate?: Date;
   deliveryDate?: Date;
   deliveryDriver?: Types.ObjectId;
