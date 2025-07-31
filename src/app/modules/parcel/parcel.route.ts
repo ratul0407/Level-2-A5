@@ -17,4 +17,9 @@ router.post(
 );
 
 router.post("/approve", checkAuth(Role.ADMIN), ParcelController.approveParcel);
+router.post("/confirm-delivery", checkAuth(Role.ADMIN, Role.RECEIVER));
+router.post("/cancel", checkAuth(Role.ADMIN, Role.SENDER));
+router.get("/:id", checkAuth(...Object.values(Role)));
+router.get("/me", checkAuth(...Object.values(Role)));
+router.get("/all-parcels", checkAuth(Role.ADMIN));
 export const ParcelRoutes = router;
