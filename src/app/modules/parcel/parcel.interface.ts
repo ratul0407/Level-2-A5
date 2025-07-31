@@ -4,7 +4,6 @@ import { IAddress } from "../user/user.interface";
 export enum Status {
   REQUESTED = "REQUESTED",
   APPROVED = "APPROVED",
-  PENDING_PICKUP = "PENDING_PICKUP",
   PICKED_UP = "PICKED_UP",
   DISPATCHED = "DISPATCHED",
   OUT_FOR_DELIVERY = "OUT_FOR_DELIVERY",

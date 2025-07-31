@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import AppError from "../../errorHelpers/AppError";
+import { statusTransitions } from "../../utils/statusTransitions";
 import { IAddress } from "../user/user.interface";
 import { User } from "../user/user.model";
 import { IParcel, Status } from "./parcel.interface";
@@ -96,7 +98,47 @@ const approveParcel = async (id: string, deliveryDriver: string) => {
 
   return parcel;
 };
+
+const updateStatus = async (id: string, newStatus: Status) => {
+  const parcel = await Parcel.findOne({ trackingId: id });
+  if (!parcel) {
+    throw new AppError(httpStatus.BAD_REQUEST, "The parcel does not exist");
+  }
+  const currentState =
+    parcel.trackingEvents![parcel.trackingEvents!.length - 1]?.status;
+  console.log(currentState);
+  if (!currentState) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "No current status found for the parcel"
+    );
+  }
+  const allowedStatus = statusTransitions[currentState];
+  if (!allowedStatus.includes(newStatus)) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Invalid status transition: ${currentState} to ${newStatus}`
+    );
+  }
+  const updatedParcel = await Parcel.findOneAndUpdate(
+    { trackingId: id },
+    {
+      $push: {
+        trackingEvents: {
+          status: newStatus,
+          at: Date.now(),
+        },
+      },
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  return updatedParcel;
+};
 export const ParcelService = {
   createParcel,
   approveParcel,
+  updateStatus,
 };
