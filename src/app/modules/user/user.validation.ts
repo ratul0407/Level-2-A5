@@ -24,8 +24,8 @@ export const createUserZod = z.object({
       city: z.string({ error: "city should be string" }),
       zip: z
         .number({ error: "zip code must be in number" })
-        .min(4, { message: "zip code must be of 4 digits" })
-        .max(4, { message: "zip code cannot be larger than 4 digits" }),
+        .min(1000, { message: "zip code must be of 4 digits" })
+        .max(9999, { message: "zip code cannot be larger than 4 digits" }),
       street: z.string({ error: "street should be string" }),
     })
     .optional(),

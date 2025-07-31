@@ -43,7 +43,12 @@ const updateUser = async (
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
   if (payload.role) {
-    if (decoded.role === Role.ADMIN) {
+    if (
+      (payload.role === Role.DELIVERY_PERSONNEL &&
+        decoded.role !== Role.ADMIN) ||
+      (payload.role === Role.SENDER && decoded.role !== Role.ADMIN) ||
+      (payload.role === Role.RECEIVER && decoded.role !== Role.ADMIN)
+    ) {
       throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
     }
   }
