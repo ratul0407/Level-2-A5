@@ -1,5 +1,6 @@
 import z from "zod";
 import { Divisions } from "../user/user.interface";
+import { Status } from "./parcel.interface";
 
 export const createParcelZod = z.object({
   name: z.string({ error: "Name must be a string" }),
@@ -14,4 +15,8 @@ export const createParcelZod = z.object({
   }),
   sameDivision: z.boolean(),
   weight: z.number(),
+});
+
+export const parcelStatusZod = z.object({
+  status: z.enum(Object.values(Status)),
 });

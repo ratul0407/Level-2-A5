@@ -4,7 +4,7 @@ import { validateParcels } from "../../middlewares/validateParcels";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.interface";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { createParcelZod } from "./parcel.validation";
+import { createParcelZod, parcelStatusZod } from "./parcel.validation";
 
 const router = Router();
 
@@ -24,6 +24,7 @@ router.patch(
 router.patch(
   "/status/:tracking_id",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.DELIVERY_PERSONNEL),
+  validateRequest(parcelStatusZod),
   ParcelController.updateStatus
 );
 router.post(

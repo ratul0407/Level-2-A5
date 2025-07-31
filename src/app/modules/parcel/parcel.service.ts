@@ -123,6 +123,7 @@ const updateStatus = async (id: string, newStatus: Status) => {
   const updatedParcel = await Parcel.findOneAndUpdate(
     { trackingId: id },
     {
+      status: newStatus,
       $push: {
         trackingEvents: {
           status: newStatus,

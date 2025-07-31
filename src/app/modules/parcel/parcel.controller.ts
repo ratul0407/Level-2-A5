@@ -35,7 +35,7 @@ const approveParcel = catchAsync(
 const updateStatus = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.tracking_id;
-    const status = req.body;
+    const { status } = req.body;
     const result = await ParcelService.updateStatus(id, status);
     sendResponse(res, {
       success: true,
