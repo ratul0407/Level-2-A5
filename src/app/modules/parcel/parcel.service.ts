@@ -152,20 +152,8 @@ const cancelParcel = async (
     throw new AppError(httpStatus.BAD_REQUEST, "Parcel does not exist");
   }
 
-  if (parcel.status === Status.CANCELLED) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Parcel has been already cancelled"
-    );
-  }
-  if (parcel.status === Status.DELIVERED) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "This parcel has already been delivered"
-    );
-  }
   if (decodedToken.role === Role.RECEIVER) {
-    if (parcel.status === Status.DISPATCHED) {
+    if (parcel.status === Status.OUT_FOR_DELIVERY) {
       throw new AppError(
         httpStatus.BAD_REQUEST,
         "You cannot cancel your parcel now"
@@ -173,7 +161,7 @@ const cancelParcel = async (
     }
   }
   if (decodedToken.role === Role.SENDER) {
-    if (parcel.status === Status.OUT_FOR_DELIVERY) {
+    if (parcel.status === Status.DISPATCHED) {
       throw new AppError(
         httpStatus.BAD_REQUEST,
         "You cannot cancel your parcel now"
