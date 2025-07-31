@@ -75,16 +75,20 @@ const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
   }
 };
 
-const approveParcel = async (id: string, driver: string) => {
+const approveParcel = async (id: string, deliveryDriver: string) => {
   const isParcelExists = await Parcel.findOne({ trackingId: id });
   if (!isParcelExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "No Parcel found");
+  }
+  const driverUser = await User.findById(deliveryDriver);
+  if (!driverUser) {
+    throw new AppError(httpStatus.BAD_REQUEST, "The driver does not exist");
   }
   const parcel = await Parcel.findOneAndUpdate(
     { trackingId: id },
     {
       status: Status.APPROVED,
-      deliveryDriver: driver,
+      deliveryDriver: deliveryDriver,
       $push: { trackingEvents: { status: Status.APPROVED, at: Date.now() } },
     },
     { new: true, runValidators: true }

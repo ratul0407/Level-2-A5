@@ -21,8 +21,8 @@ const createParcel = catchAsync(
 const approveParcel = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.tracking_id;
-    const driver = req.body;
-    const result = await ParcelService.approveParcel(id, driver);
+    const { deliveryDriver } = req.body;
+    const result = await ParcelService.approveParcel(id, deliveryDriver);
     sendResponse(res, {
       success: true,
       statusCode: 201,
