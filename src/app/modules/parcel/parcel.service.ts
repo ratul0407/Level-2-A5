@@ -3,6 +3,7 @@ import { IAddress } from "../user/user.interface";
 import { User } from "../user/user.model";
 import { IParcel, Status } from "./parcel.interface";
 import { Parcel } from "./parcel.model";
+import httpStatus from "http-status-codes";
 const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
   const session = await Parcel.startSession();
 
@@ -19,6 +20,20 @@ const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
         amount = Math.ceil(100 + weight * 7);
       }
     }
+    let deliveryDate: Date;
+    if (payload.sameDivision) {
+      const minDays = 4;
+      const maxDays = 8;
+      const randomDays =
+        minDays + Math.floor(Math.random() * (maxDays - minDays + 1));
+      deliveryDate = new Date(Date.now() + randomDays * 24 * 60 * 60 * 1000);
+    } else {
+      const minDays = 7;
+      const maxDays = 14;
+      const randomDays =
+        minDays + Math.floor(Math.random() * (maxDays - minDays + 1));
+      deliveryDate = new Date(Date.now() + randomDays * 24 * 60 * 60 * 1000);
+    }
     const parcelData = {
       ...payload,
       trackingEvents: [
@@ -28,32 +43,28 @@ const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
         },
       ],
       senderInfo: location,
-      estimatedDeliveryDate: "984394893",
+      estimatedDeliveryDate: deliveryDate,
       cost: amount,
     };
     console.log(parcelData);
     const createdParcel = await Parcel.create([parcelData], { session });
 
-    const senderUser = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
       parcelData.sender,
       {
         $push: { parcels: createdParcel[0]._id },
       },
       { new: true, session }
     );
-    if (!senderUser) {
-      throw new AppError(400, "Sender user not found");
-    }
-    const receiverUser = await User.findByIdAndUpdate(
+
+    await User.findByIdAndUpdate(
       parcelData.receiver,
       {
         $push: { parcels: createdParcel[0]._id },
       },
       { new: true }
     );
-    if (!receiverUser) {
-      throw new AppError(400, "Receiver not found");
-    }
+
     await session.commitTransaction();
     return createdParcel[0];
   } catch (error) {
@@ -64,8 +75,22 @@ const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
   }
 };
 
-const approveParcel = async (id: string) => {
-  console.log(id);
+const approveParcel = async (id: string, driver: string) => {
+  const isParcelExists = await Parcel.findOne({ trackingId: id });
+  if (!isParcelExists) {
+    throw new AppError(httpStatus.BAD_REQUEST, "No Parcel found");
+  }
+  const parcel = await Parcel.findOneAndUpdate(
+    { trackingId: id },
+    {
+      status: Status.APPROVED,
+      deliveryDriver: driver,
+      $push: { trackingEvents: { status: Status.APPROVED, at: Date.now() } },
+    },
+    { new: true, runValidators: true }
+  );
+
+  return parcel;
 };
 export const ParcelService = {
   createParcel,
