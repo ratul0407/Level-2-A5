@@ -51,5 +51,9 @@ router.post(
 );
 router.get("/:tracking_id", checkAuth(...Object.values(Role)));
 router.get("/me", checkAuth(...Object.values(Role)));
-router.get("/all-parcels", checkAuth(Role.ADMIN, Role.SUPER_ADMIN));
+router.get(
+  "/all-parcels",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  ParcelController.getAllParcels
+);
 export const ParcelRoutes = router;

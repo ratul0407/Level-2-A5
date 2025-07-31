@@ -60,9 +60,22 @@ const cancelParcel = catchAsync(
     });
   }
 );
+
+const getAllParcels = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await ParcelService.getAllParcels();
+    sendResponse(res, {
+      success: true,
+      statusCode: 201,
+      message: "all parcels retrieved successfully!",
+      data: result,
+    });
+  }
+);
 export const ParcelController = {
   createParcel,
   approveParcel,
   updateStatus,
   cancelParcel,
+  getAllParcels,
 };

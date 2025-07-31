@@ -187,9 +187,14 @@ const cancelParcel = async (
   );
   return updatedParcel;
 };
+
+const getAllParcels = async () => {
+  return {};
+};
 export const ParcelService = {
   createParcel,
   approveParcel,
   updateStatus,
   cancelParcel,
+  getAllParcels,
 };
