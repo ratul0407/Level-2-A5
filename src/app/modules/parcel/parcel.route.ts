@@ -5,6 +5,7 @@ import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.interface";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { createParcelZod, parcelStatusZod } from "./parcel.validation";
+import { checkParcels } from "../../middlewares/checkParcels";
 
 const router = Router();
 
@@ -28,6 +29,7 @@ router.patch(
 router.patch(
   "/status/:tracking_id",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.DELIVERY_PERSONNEL),
+  checkParcels(),
   validateRequest(parcelStatusZod),
   ParcelController.updateStatus
 );
@@ -36,6 +38,7 @@ router.patch(
 router.patch(
   "/cancel/:tracking_id",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.SENDER, Role.RECEIVER),
+  checkParcels(),
   ParcelController.cancelParcel
 );
 router.post(

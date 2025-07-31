@@ -146,7 +146,8 @@ const cancelParcel = async (
   cancelStatus: Status,
   decodedToken: JwtPayload
 ) => {
-  const parcel = await Parcel.findOne({ trackingEvents: id });
+  const parcel = await Parcel.findOne({ trackingId: id });
+
   if (!parcel) {
     throw new AppError(httpStatus.BAD_REQUEST, "Parcel does not exist");
   }
@@ -183,10 +184,10 @@ const cancelParcel = async (
   const updatedParcel = await Parcel.findOneAndUpdate(
     { trackingId: id },
     {
-      status: Status.CANCELLED,
+      status: cancelStatus,
       $push: {
         trackingEvents: {
-          status: Status.CANCELLED,
+          status: cancelStatus,
           at: Date.now(),
         },
       },
