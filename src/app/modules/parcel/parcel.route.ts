@@ -8,6 +8,7 @@ import { createParcelZod, parcelStatusZod } from "./parcel.validation";
 
 const router = Router();
 
+// create parcel
 router.post(
   "/create",
   checkAuth(Role.SENDER, Role.SUPER_ADMIN, Role.ADMIN),
@@ -16,16 +17,26 @@ router.post(
   ParcelController.createParcel
 );
 
+// admin approval
 router.patch(
   "/approve/:tracking_id",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   ParcelController.approveParcel
 );
+
+// delivery personnel's status update route
 router.patch(
   "/status/:tracking_id",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.DELIVERY_PERSONNEL),
   validateRequest(parcelStatusZod),
   ParcelController.updateStatus
+);
+
+//cancel route for sender and receiver
+router.patch(
+  "/cancel/:tracking_id",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.SENDER, Role.RECEIVER),
+  ParcelController.cancelParcel
 );
 router.post(
   "/confirm-delivery/:tracking_id",

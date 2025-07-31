@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../errorHelpers/AppError";
 import { statusTransitions } from "../../utils/statusTransitions";
-import { IAddress } from "../user/user.interface";
+import { IAddress, Role } from "../user/user.interface";
 import { User } from "../user/user.model";
 import { IParcel, Status } from "./parcel.interface";
 import { Parcel } from "./parcel.model";
 import httpStatus from "http-status-codes";
+
 const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
   const session = await Parcel.startSession();
 
@@ -138,8 +140,67 @@ const updateStatus = async (id: string, newStatus: Status) => {
   );
   return updatedParcel;
 };
+
+const cancelParcel = async (
+  id: string,
+  cancelStatus: Status,
+  decodedToken: JwtPayload
+) => {
+  const parcel = await Parcel.findOne({ trackingEvents: id });
+  if (!parcel) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Parcel does not exist");
+  }
+
+  if (parcel.status === Status.CANCELLED) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Parcel has been already cancelled"
+    );
+  }
+  if (parcel.status === Status.DELIVERED) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "This parcel has already been delivered"
+    );
+  }
+  if (decodedToken.role === Role.RECEIVER) {
+    if (parcel.status === Status.DISPATCHED) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "You cannot cancel your parcel now"
+      );
+    }
+  }
+  if (decodedToken.role === Role.SENDER) {
+    if (parcel.status === Status.OUT_FOR_DELIVERY) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "You cannot cancel your parcel now"
+      );
+    }
+  }
+
+  const updatedParcel = await Parcel.findOneAndUpdate(
+    { trackingId: id },
+    {
+      status: Status.CANCELLED,
+      $push: {
+        trackingEvents: {
+          status: Status.CANCELLED,
+          at: Date.now(),
+        },
+      },
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  return updatedParcel;
+};
 export const ParcelService = {
   createParcel,
   approveParcel,
   updateStatus,
+  cancelParcel,
 };
