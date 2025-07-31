@@ -16,7 +16,11 @@ router.post(
   ParcelController.createParcel
 );
 
-router.post("/approve", checkAuth(Role.ADMIN), ParcelController.approveParcel);
+router.patch(
+  "/approve/:tracking_id",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  ParcelController.approveParcel
+);
 router.post("/confirm-delivery", checkAuth(Role.ADMIN, Role.RECEIVER));
 router.post("/cancel", checkAuth(Role.ADMIN, Role.SENDER));
 router.get("/:id", checkAuth(...Object.values(Role)));
