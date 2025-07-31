@@ -78,6 +78,10 @@ const userSchema = new Schema<IUser>(
     },
     isVerified: { type: Boolean, default: false },
     auths: [authProviderScheme],
+    parcels: {
+      type: [Schema.Types.ObjectId],
+      ref: "Parcel",
+    },
   },
   {
     timestamps: true,

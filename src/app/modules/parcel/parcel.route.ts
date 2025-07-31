@@ -10,8 +10,8 @@ const router = Router();
 
 router.post(
   "/create",
-  validateRequest(createParcelZod),
   checkAuth(Role.SENDER, Role.ADMIN),
+  validateRequest(createParcelZod),
   validateParcels(),
   ParcelController.createParcel
 );

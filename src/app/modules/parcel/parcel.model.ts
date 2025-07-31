@@ -19,7 +19,6 @@ const parcelSchema = new Schema<IParcel>(
     },
     trackingId: {
       type: String,
-      required: true,
     },
     senderInfo: addressSchema,
     deliveryLocation: addressSchema,
@@ -29,10 +28,12 @@ const parcelSchema = new Schema<IParcel>(
     },
     sender: {
       type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     receiver: {
       type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     trackingEvents: [trackingSchema],
@@ -42,7 +43,7 @@ const parcelSchema = new Schema<IParcel>(
     },
     estimatedDeliveryDate: {
       type: Date,
-      require: true,
+      required: true,
     },
     pickUpDate: {
       type: Date,
@@ -52,7 +53,7 @@ const parcelSchema = new Schema<IParcel>(
     },
     deliveryDriver: {
       type: Schema.Types.ObjectId,
-      require: true,
+      ref: "User",
     },
   },
   {
