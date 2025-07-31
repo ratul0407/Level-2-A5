@@ -18,6 +18,19 @@ const createParcel = catchAsync(
   }
 );
 
+const approveParcel = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.tracking_id;
+    const result = await ParcelService.approveParcel(id);
+    sendResponse(res, {
+      success: true,
+      statusCode: 201,
+      message: "Parcel has been approved",
+      data: result,
+    });
+  }
+);
 export const ParcelController = {
   createParcel,
+  approveParcel,
 };

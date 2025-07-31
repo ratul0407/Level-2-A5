@@ -3,14 +3,19 @@ import { IParcel, ITracking, Status } from "./parcel.interface";
 import { addressSchema } from "../user/user.model";
 import { v4 as uuidv4 } from "uuid";
 import { getFormattedDate } from "../../utils/getFormattedDate";
-const trackingSchema = new Schema<ITracking>({
-  status: {
-    type: String,
-    enum: Object.values(Status),
-    required: true,
+const trackingSchema = new Schema<ITracking>(
+  {
+    status: {
+      type: String,
+      enum: Object.values(Status),
+      required: true,
+    },
+    at: Date,
   },
-  at: Date,
-});
+  {
+    _id: false,
+  }
+);
 const parcelSchema = new Schema<IParcel>(
   {
     name: {
@@ -54,6 +59,10 @@ const parcelSchema = new Schema<IParcel>(
     deliveryDriver: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    cost: {
+      type: Number,
+      required: true,
     },
   },
   {

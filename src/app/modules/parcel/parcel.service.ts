@@ -33,6 +33,10 @@ const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
   return createdParcel;
 };
 
+const approveParcel = async (id: string) => {
+  console.log(id);
+};
 export const ParcelService = {
   createParcel,
+  approveParcel,
 };

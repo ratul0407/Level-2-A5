@@ -62,7 +62,7 @@ const userSchema = new Schema<IUser>(
     picture: {
       type: String,
     },
-    address: addressSchema,
+    address: { type: addressSchema, required: true },
     role: {
       type: String,
       enum: Object.values(Role),

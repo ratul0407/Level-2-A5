@@ -16,4 +16,5 @@ router.post(
   ParcelController.createParcel
 );
 
+router.post("/approve", checkAuth(Role.ADMIN), ParcelController.approveParcel);
 export const ParcelRoutes = router;
