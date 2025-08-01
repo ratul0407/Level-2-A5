@@ -6,6 +6,7 @@ import { createUserTokens } from "../../utils/userTokens";
 import AppError from "../../errorHelpers/AppError";
 import { JwtPayload } from "jsonwebtoken";
 import httpStatus from "http-status-codes";
+import { Parcel } from "../parcel/parcel.model";
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
   const hashedPassword = await bcryptjs.hash(
@@ -71,8 +72,11 @@ const updateUser = async (
   return updatedUser;
 };
 
-const getMyParcels = async () => {
-  return {};
+const getMyParcels = async (id: string) => {
+  const user = await User.findById(id);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const parcels = await Parcel.find({ _id: { $in: user!.parcels } });
+  return parcels;
 };
 export const UserService = {
   createUser,

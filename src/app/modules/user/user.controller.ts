@@ -40,11 +40,12 @@ const updateUser = catchAsync(
 
 const getMyParcels = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await UserService.getMyParcels();
+    const id = req.params.id;
+    const result = await UserService.getMyParcels(id);
     sendResponse(res, {
       success: true,
       statusCode: 201,
-      message: "Successfully retreived Users parcels",
+      message: "Successfully retrieved Users parcels",
       data: result,
     });
   }
