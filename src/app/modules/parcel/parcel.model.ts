@@ -41,7 +41,7 @@ const parcelSchema = new Schema<IParcel>(
       ref: "User",
       required: true,
     },
-    status: {
+    currentStatus: {
       type: String,
       enum: Object.values(Status),
       default: Status.REQUESTED,

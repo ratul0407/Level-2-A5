@@ -7,6 +7,8 @@ import { User } from "../user/user.model";
 import { IParcel, Status } from "./parcel.interface";
 import { Parcel } from "./parcel.model";
 import httpStatus from "http-status-codes";
+import { QueryBuilder } from "../../utils/queryBuilder";
+import { parcelSearchableFields } from "./parcel.constant";
 
 const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
   const session = await Parcel.startSession();
@@ -91,7 +93,7 @@ const approveParcel = async (id: string, deliveryDriver: string) => {
   const parcel = await Parcel.findOneAndUpdate(
     { trackingId: id },
     {
-      status: Status.APPROVED,
+      currentStatus: Status.APPROVED,
       deliveryDriver: deliveryDriver,
       $push: { trackingEvents: { status: Status.APPROVED, at: Date.now() } },
     },
@@ -125,7 +127,7 @@ const updateStatus = async (id: string, newStatus: Status) => {
   const updatedParcel = await Parcel.findOneAndUpdate(
     { trackingId: id },
     {
-      status: newStatus,
+      currentStatus: newStatus,
       $push: {
         trackingEvents: {
           status: newStatus,
@@ -153,7 +155,7 @@ const cancelParcel = async (
   }
 
   if (decodedToken.role === Role.RECEIVER) {
-    if (parcel.status === Status.OUT_FOR_DELIVERY) {
+    if (parcel.currentStatus === Status.OUT_FOR_DELIVERY) {
       throw new AppError(
         httpStatus.BAD_REQUEST,
         "You cannot cancel your parcel now"
@@ -161,7 +163,7 @@ const cancelParcel = async (
     }
   }
   if (decodedToken.role === Role.SENDER) {
-    if (parcel.status === Status.DISPATCHED) {
+    if (parcel.currentStatus === Status.DISPATCHED) {
       throw new AppError(
         httpStatus.BAD_REQUEST,
         "You cannot cancel your parcel now"
@@ -188,7 +190,15 @@ const cancelParcel = async (
   return updatedParcel;
 };
 
-const getAllParcels = async () => {
+const getAllParcels = async (query: Record<string, string>) => {
+  const modelQuery = new QueryBuilder(Parcel.find(), query);
+  const parcels = await modelQuery.search(parcelSearchableFields).filter()
+    .modelQuery;
+
+  return { parcels };
+};
+
+const confirmDelivery = async () => {
   return {};
 };
 export const ParcelService = {
@@ -197,4 +207,5 @@ export const ParcelService = {
   updateStatus,
   cancelParcel,
   getAllParcels,
+  confirmDelivery,
 };

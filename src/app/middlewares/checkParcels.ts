@@ -11,10 +11,10 @@ export const checkParcels =
       if (!parcel) {
         throw new AppError(httpStatus.BAD_REQUEST, "Parcel does not exist");
       }
-      if (parcel.status === Status.DELIVERED) {
+      if (parcel.currentStatus === Status.DELIVERED) {
         throw new AppError(httpStatus.CONFLICT, "Parcel is already delivered");
       }
-      if (parcel.status === Status.CANCELLED) {
+      if (parcel.currentStatus === Status.CANCELLED) {
         throw new AppError(httpStatus.CONFLICT, "Parcel has been cancelled");
       }
       next();

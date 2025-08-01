@@ -43,7 +43,8 @@ router.patch(
 );
 router.post(
   "/confirm-delivery/:tracking_id",
-  checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.RECEIVER)
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.RECEIVER),
+  ParcelController.confirmDelivery
 );
 router.post(
   "/cancel/:tracking_id",

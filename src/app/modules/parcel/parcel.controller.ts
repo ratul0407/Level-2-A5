@@ -63,11 +63,24 @@ const cancelParcel = catchAsync(
 
 const getAllParcels = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await ParcelService.getAllParcels();
+    const query = req.query as Record<string, string>;
+    const result = await ParcelService.getAllParcels(query);
     sendResponse(res, {
       success: true,
       statusCode: 201,
       message: "all parcels retrieved successfully!",
+      data: result,
+    });
+  }
+);
+
+const confirmDelivery = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await ParcelService.confirmDelivery();
+    sendResponse(res, {
+      success: true,
+      statusCode: 201,
+      message: "Parcel has been delivered",
       data: result,
     });
   }
@@ -78,4 +91,5 @@ export const ParcelController = {
   updateStatus,
   cancelParcel,
   getAllParcels,
+  confirmDelivery,
 };

@@ -22,7 +22,7 @@ export interface IParcel {
   name: string;
   sender: Types.ObjectId;
   receiver: Types.ObjectId;
-  status: Status;
+  currentStatus: Status;
   trackingEvents?: ITracking[];
   senderInfo?: IAddress;
   deliveryLocation: IAddress;
