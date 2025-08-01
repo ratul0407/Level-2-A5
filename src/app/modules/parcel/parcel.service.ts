@@ -198,8 +198,45 @@ const getAllParcels = async (query: Record<string, string>) => {
   return { parcels };
 };
 
-const confirmDelivery = async () => {
-  return {};
+const confirmDelivery = async (id: string, delivered: boolean) => {
+  if (delivered) {
+    const parcelExists = await Parcel.findOne({ trackingId: id });
+    if (!parcelExists) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Parcel does not exist");
+    }
+    const updatedParcel = await Parcel.findOneAndUpdate(
+      { trackingId: id },
+      {
+        currentStatus: Status.DELIVERED,
+        $push: {
+          trackingEvents: {
+            status: Status.DELIVERED,
+            at: Date.now(),
+          },
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    return updatedParcel;
+  } else {
+    const updatedParcel = await Parcel.findOneAndUpdate(
+      { trackingId: id },
+      {
+        currentStatus: Status.FAILED_DELIVERY,
+        $push: {
+          trackingEvents: {
+            status: Status.FAILED_DELIVERY,
+            at: Date.now(),
+          },
+        },
+      },
+      { new: true, runValidators: true }
+    );
+    return updatedParcel;
+  }
 };
 export const ParcelService = {
   createParcel,

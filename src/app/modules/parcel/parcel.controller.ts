@@ -76,7 +76,9 @@ const getAllParcels = catchAsync(
 
 const confirmDelivery = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await ParcelService.confirmDelivery();
+    const id = req.params.tracking_id;
+    const { delivered } = req.body;
+    const result = await ParcelService.confirmDelivery(id, delivered);
     sendResponse(res, {
       success: true,
       statusCode: 201,

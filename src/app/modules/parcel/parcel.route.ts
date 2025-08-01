@@ -41,9 +41,12 @@ router.patch(
   checkParcels(),
   ParcelController.cancelParcel
 );
-router.post(
+
+//delivery confirmation from the receiver
+router.patch(
   "/confirm-delivery/:tracking_id",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.RECEIVER),
+  checkParcels(),
   ParcelController.confirmDelivery
 );
 router.post(
