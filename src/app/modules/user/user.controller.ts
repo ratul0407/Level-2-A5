@@ -37,7 +37,20 @@ const updateUser = catchAsync(
     });
   }
 );
+
+const getMyParcels = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await UserService.getMyParcels();
+    sendResponse(res, {
+      success: true,
+      statusCode: 201,
+      message: "Successfully retreived Users parcels",
+      data: result,
+    });
+  }
+);
 export const UserController = {
   createUser,
   updateUser,
+  getMyParcels,
 };

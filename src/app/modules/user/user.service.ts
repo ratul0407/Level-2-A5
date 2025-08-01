@@ -70,7 +70,12 @@ const updateUser = async (
 
   return updatedUser;
 };
+
+const getMyParcels = async () => {
+  return {};
+};
 export const UserService = {
   createUser,
   updateUser,
+  getMyParcels,
 };
