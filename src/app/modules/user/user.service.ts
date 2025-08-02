@@ -88,15 +88,16 @@ const getMyParcels = async (id: string, query: Record<string, string>) => {
     .filter()
     .sort()
     .fields()
-    .paginate()
-    .build();
-  // const [data, meta] = await Promise.all([
-  //   parcels.build(),
-  //   queryBuilder.getMeta(),
-  // ]);
-  // console.log(data);
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    parcels.build(),
+    queryBuilder.getMeta(),
+  ]);
+
   return {
-    parcels,
+    meta,
+    data,
   };
 };
 export const UserService = {

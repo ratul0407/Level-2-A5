@@ -124,23 +124,44 @@ const updateStatus = async (id: string, newStatus: Status) => {
       `Invalid status transition: ${currentState} to ${newStatus}`
     );
   }
-  const updatedParcel = await Parcel.findOneAndUpdate(
-    { trackingId: id },
-    {
-      currentStatus: newStatus,
-      $push: {
-        trackingEvents: {
-          status: newStatus,
-          at: Date.now(),
+  if (newStatus === Status.PICKED_UP) {
+    const updatedParcel = await Parcel.findOneAndUpdate(
+      { trackingId: id },
+      {
+        currentStatus: newStatus,
+        pickUpDate: Date.now(),
+        $push: {
+          trackingEvents: {
+            status: newStatus,
+            at: Date.now(),
+          },
         },
       },
-    },
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
-  return updatedParcel;
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    return updatedParcel;
+  } else {
+    const updatedParcel = await Parcel.findOneAndUpdate(
+      { trackingId: id },
+      {
+        currentStatus: newStatus,
+        $push: {
+          trackingEvents: {
+            status: newStatus,
+            at: Date.now(),
+          },
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    return updatedParcel;
+  }
 };
 
 const cancelParcel = async (
@@ -191,11 +212,16 @@ const cancelParcel = async (
 };
 
 const getAllParcels = async (query: Record<string, string>) => {
-  const modelQuery = new QueryBuilder(Parcel.find(), query);
-  const parcels = await modelQuery.search(parcelSearchableFields).filter()
-    .modelQuery;
+  const queryBuilder = new QueryBuilder(Parcel.find(), query);
+  const parcels = await queryBuilder
+    .search(parcelSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
 
-  return { parcels };
+  const [data, meta] = await Promise.all([parcels.build(), parcels.getMeta()]);
+  return { meta, data };
 };
 
 const confirmDelivery = async (id: string, delivered: boolean) => {
@@ -208,6 +234,7 @@ const confirmDelivery = async (id: string, delivered: boolean) => {
       { trackingId: id },
       {
         currentStatus: Status.DELIVERED,
+        deliveryDate: Date.now(),
         $push: {
           trackingEvents: {
             status: Status.DELIVERED,
