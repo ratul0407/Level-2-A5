@@ -20,10 +20,10 @@ There are three main API endpoints `user`, `auth` and `parcel`
 
 - `[Post] /create` : This is the route used for creating a parcel. Only Senders can Create a parcel.
 
-- `[PATCH] /approve/:tracking_id` : This is the route that `ADMIN` will use to approve any `requested` parcels and assign them to a `DELIVERY_PERSONNEL`.
-- `[PATCH] /status/:tracking_id`: The `DELIVERY_PERSONNEL` will be using this route to update the status of a parcel from `APPROVED` to `PICKED_UP` and then `OUT_FOR_DELIVERY` and so on.
-- `[PATCH] /cancel/:tracking_id` : This route will be used for cancelling and order both the `RECEIVER` and `SENDER` can use this route to cancel a delivery. But they will be able to cancel if the `STATUS` is appropriate for cancelling and order.
-- `[PATCH] /confirm-delivery/:tracking_id`: This route will be used to confirm a parcel being delivered by the `RECEIVER` of that parcel.
-- `[GET] /all-parcels` : This is an `ADMIN` only route. This route will be used to get all the parcels and filter them according to the need.
-- `[GET] /my-parcels/:tracking_id` : This route will be used to get a single parcel using it's tracking_id. Both the `SENDER` and `RECEIVER` can use this route for their needs.
+- `[PATCH] /approve/:tracking_id` : This is the route that **ADMIN** will use to approve any **requested** parcels and assign them to a **DELIVERY_PERSONNEL**.
+- `[PATCH] /status/:tracking_id`: The **DELIVERY_PERSONNEL** will be using this route to update the status of a parcel from **APPROVED** to **PICKED_UP** and then **OUT_FOR_DELIVERY** and so on.
+- `[PATCH] /cancel/:tracking_id` : This route will be used for cancelling and order both the **RECEIVER** and **SENDER** can use this route to cancel a delivery. But they will be able to cancel if the **STATUS** is appropriate for cancelling and order.
+- `[PATCH] /confirm-delivery/:tracking_id`: This route will be used to confirm a parcel being delivered by the **RECEIVER** of that parcel.
+- `[GET] /all-parcels` : This is an **ADMIN** only route. This route will be used to get all the parcels and filter them according to the need.
+- `[GET] /my-parcels/:tracking_id` : This route will be used to get a single parcel using it's tracking_id. Both the **SENDER** and **RECEIVER** can use this route for their needs.
 - `[GET] /my-parcels/:id` : This get route will give the user all of his parcels. And the user can filter them out as he wants.
