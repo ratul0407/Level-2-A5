@@ -11,7 +11,7 @@ const trackingSchema = new Schema<ITracking>(
       enum: Object.values(Status),
       required: true,
     },
-    updatedBy: Object.values(Role),
+    updatedBy: { type: String, enum: Object.values(Role), required: true },
     at: Date,
   },
   {

@@ -10,7 +10,12 @@ const createParcel = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const location = req.senderInfo;
     const payload = req.body;
-    const result = await ParcelService.createParcel(payload, location);
+    const decodedToken = req.user as JwtPayload;
+    const result = await ParcelService.createParcel(
+      payload,
+      location,
+      decodedToken
+    );
     sendResponse(res, {
       success: true,
       statusCode: 201,
@@ -24,7 +29,12 @@ const approveParcel = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.tracking_id;
     const { deliveryDriver } = req.body;
-    const result = await ParcelService.approveParcel(id, deliveryDriver);
+    const decodedToken = req.user as JwtPayload;
+    const result = await ParcelService.approveParcel(
+      id,
+      deliveryDriver,
+      decodedToken
+    );
     sendResponse(res, {
       success: true,
       statusCode: 201,
@@ -38,7 +48,8 @@ const updateStatus = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.tracking_id;
     const { status } = req.body;
-    const result = await ParcelService.updateStatus(id, status);
+    const decodedToken = req.user as JwtPayload;
+    const result = await ParcelService.updateStatus(id, status, decodedToken);
     sendResponse(res, {
       success: true,
       statusCode: 201,
@@ -80,7 +91,12 @@ const confirmDelivery = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.tracking_id;
     const { delivered } = req.body;
-    const result = await ParcelService.confirmDelivery(id, delivered);
+    const decodedToken = req.user as JwtPayload;
+    const result = await ParcelService.confirmDelivery(
+      id,
+      delivered,
+      decodedToken
+    );
     sendResponse(res, {
       success: true,
       statusCode: 201,

@@ -10,7 +10,12 @@ import httpStatus from "http-status-codes";
 import { QueryBuilder } from "../../utils/queryBuilder";
 import { parcelSearchableFields } from "./parcel.constant";
 
-const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
+const createParcel = async (
+  payload: Partial<IParcel>,
+  location: IAddress,
+  token: JwtPayload
+) => {
+  console.log(token);
   const session = await Parcel.startSession();
 
   session.startTransaction();
@@ -45,7 +50,8 @@ const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
       trackingEvents: [
         {
           status: Status.REQUESTED,
-          at: new Date(), // Use Date object for Mongoose
+          updatedBy: token?.role,
+          at: Date.now(), // Use Date object for Mongoose
         },
       ],
       senderInfo: location,
@@ -81,7 +87,11 @@ const createParcel = async (payload: Partial<IParcel>, location: IAddress) => {
   }
 };
 
-const approveParcel = async (id: string, deliveryDriver: string) => {
+const approveParcel = async (
+  id: string,
+  deliveryDriver: string,
+  token: JwtPayload
+) => {
   const isParcelExists = await Parcel.findOne({ trackingId: id });
   if (!isParcelExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "No Parcel found");
@@ -95,7 +105,13 @@ const approveParcel = async (id: string, deliveryDriver: string) => {
     {
       currentStatus: Status.APPROVED,
       deliveryDriver: deliveryDriver,
-      $push: { trackingEvents: { status: Status.APPROVED, at: Date.now() } },
+      $push: {
+        trackingEvents: {
+          status: Status.APPROVED,
+          updatedBy: token?.role,
+          at: Date.now(),
+        },
+      },
     },
     { new: true, runValidators: true }
   );
@@ -103,7 +119,11 @@ const approveParcel = async (id: string, deliveryDriver: string) => {
   return parcel;
 };
 
-const updateStatus = async (id: string, newStatus: Status) => {
+const updateStatus = async (
+  id: string,
+  newStatus: Status,
+  token: JwtPayload
+) => {
   const parcel = await Parcel.findOne({ trackingId: id });
   if (!parcel) {
     throw new AppError(httpStatus.BAD_REQUEST, "The parcel does not exist");
@@ -133,6 +153,7 @@ const updateStatus = async (id: string, newStatus: Status) => {
         $push: {
           trackingEvents: {
             status: newStatus,
+            updatedBy: token?.role,
             at: Date.now(),
           },
         },
@@ -151,6 +172,7 @@ const updateStatus = async (id: string, newStatus: Status) => {
         $push: {
           trackingEvents: {
             status: newStatus,
+            updatedBy: token?.role,
             at: Date.now(),
           },
         },
@@ -199,6 +221,7 @@ const cancelParcel = async (
       $push: {
         trackingEvents: {
           status: cancelStatus,
+          updatedBy: decodedToken?.role,
           at: Date.now(),
         },
       },
@@ -224,7 +247,11 @@ const getAllParcels = async (query: Record<string, string>) => {
   return { meta, data };
 };
 
-const confirmDelivery = async (id: string, delivered: boolean) => {
+const confirmDelivery = async (
+  id: string,
+  delivered: boolean,
+  token: JwtPayload
+) => {
   if (delivered) {
     const parcelExists = await Parcel.findOne({ trackingId: id });
     if (!parcelExists) {
@@ -238,6 +265,7 @@ const confirmDelivery = async (id: string, delivered: boolean) => {
         $push: {
           trackingEvents: {
             status: Status.DELIVERED,
+            updatedBy: token?.role,
             at: Date.now(),
           },
         },
@@ -256,6 +284,7 @@ const confirmDelivery = async (id: string, delivered: boolean) => {
         $push: {
           trackingEvents: {
             status: Status.FAILED_DELIVERY,
+            updatedBy: token?.role,
             at: Date.now(),
           },
         },
