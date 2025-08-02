@@ -1,0 +1,374 @@
+{
+	"info": {
+		"_postman_id": "24405ec7-1579-4a4c-a83b-eee2bf4b30f0",
+		"name": "Parcel Delivery",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40322908"
+	},
+	"item": [
+		{
+			"name": "Parcels",
+			"item": [
+				{
+					"name": "admin approval",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"deliveryDriver\": \"688b60185243f3dac6f3bf0d\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/parcel/approve/TRK-20250802-4ad12674-fa6",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"parcel",
+								"approve",
+								"TRK-20250802-4ad12674-fa6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"status\": \"PICKED_UP\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/parcel/status/TRK-20250802-4369553a-e56",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"parcel",
+								"status",
+								"TRK-20250802-4369553a-e56"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel parcel",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"status\": \"CANCELLED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/parcel/cancel/TRK-20250802-4369553a-e56",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"parcel",
+								"cancel",
+								"TRK-20250802-4369553a-e56"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get parcels ADMIN",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/parcel/all-parcels?fields=cost&sort=cost",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"parcel",
+								"all-parcels"
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "cost"
+								},
+								{
+									"key": "sort",
+									"value": "cost"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Parcel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Chairs\",\n    \"receiver\": \"688a15eeecb2e23c8f6526f7\",\n    \"deliveryLocation\": {\n        \"division\": \"DHAKA\",\n        \"city\": \"mirpur\",\n        \"zip\": 1233,\n        \"street\": \"32/C\"\n    },\n    \"sameDivision\": true,\n    \"weight\": 9\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/parcel/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"parcel",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Delivery",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"delivered\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/parcel/confirm-delivery/TRK-20250802-4369553a-e56",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"parcel",
+								"confirm-delivery",
+								"TRK-20250802-4369553a-e56"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single parcel",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Books\",\n    \"sender\": \"6888ea54f124627a2bbd1489\",\n    \"receiver\": \"\"\n\n}"
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/parcel/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"parcel",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all parcels of a user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Books\",\n    \"sender\": \"6888ea54f124627a2bbd1489\",\n    \"receiver\": \"\"\n\n}"
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/parcel/my-parcels/userid?sort=cost",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"parcel",
+								"my-parcels",
+								"userid"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "cost"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Ratul\",\n    \"email\": \"who@gmail.com\",\n    \"password\": \"12345678\",\n    \"phone\": \"01975711249\",\n    \"role\": \"SENDER\",\n    \"address\": {\n        \"division\": \"DHAKA\",\n        \"city\": \"Narayanganj\",\n        \"zip\": 1430,\n        \"street\": \"190/C\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/user/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Books\",\n    \"sender\": \"6888ea54f124627a2bbd1489\",\n    \"receiver\": \"\"\n\n}"
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/user/6888ea54f124627a2bbd1489",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"6888ea54f124627a2bbd1489"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change User activity",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/user/change-activity",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"change-activity"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"who@gmail.com\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
