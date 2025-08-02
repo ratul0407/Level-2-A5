@@ -40,12 +40,13 @@ const updateUser = catchAsync(
 
 const changeUserActivity = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { id, isActive } = req.body;
+    const { isActive } = req.body;
+    const id = req.params.id;
     const result = await UserService.changeUserActivity(id, isActive);
     sendResponse(res, {
       statusCode: 201,
       success: true,
-      message: "User has been blocked",
+      message: "User activity has been changed successfully!",
       data: result,
     });
   }

@@ -1,5 +1,5 @@
 import z from "zod";
-import { Divisions, Role } from "./user.interface";
+import { Divisions, IsActive, Role } from "./user.interface";
 
 export const createUserZod = z.object({
   name: z.string({ error: "name must be string" }),
@@ -54,4 +54,8 @@ export const updateUserZod = z.object({
     })
     .optional(),
   role: z.enum(Object.values(Role)).optional(),
+});
+
+export const userActivity = z.object({
+  isActive: z.enum(Object.values(IsActive)),
 });
