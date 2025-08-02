@@ -38,7 +38,20 @@ const updateUser = catchAsync(
   }
 );
 
+const changeUserActivity = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id, isActive } = req.body;
+    const result = await UserService.changeUserActivity(id, isActive);
+    sendResponse(res, {
+      statusCode: 201,
+      success: true,
+      message: "User has been blocked",
+      data: result,
+    });
+  }
+);
 export const UserController = {
   createUser,
   updateUser,
+  changeUserActivity,
 };

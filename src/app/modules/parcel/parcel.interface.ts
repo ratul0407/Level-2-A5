@@ -18,7 +18,7 @@ export interface ITracking {
   at: Date;
 }
 export interface IParcel {
-  _id?: string;
+  _id?: Types.ObjectId;
   trackingId?: string;
   name: string;
   sender: Types.ObjectId;

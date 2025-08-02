@@ -1,4 +1,4 @@
-import { IAuthProvider, IUser, Role } from "./user.interface";
+import { IAuthProvider, IsActive, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 import bcryptjs from "bcryptjs";
 import { envVars } from "../../config/env";
@@ -71,7 +71,12 @@ const updateUser = async (
   return updatedUser;
 };
 
+const changeUserActivity = async (id: string, isActive: IsActive) => {
+  const user = await User.findByIdAndUpdate(id, { isActive: isActive });
+  return user;
+};
 export const UserService = {
   createUser,
   updateUser,
+  changeUserActivity,
 };
