@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { ParcelService } from "./parcel.service";
 import { sendResponse } from "../../utils/sendResponse";
+import { Jwt, JwtPayload } from "jsonwebtoken";
 
 const createParcel = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -92,7 +93,8 @@ const confirmDelivery = catchAsync(
 const getParcelByTrackingId = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.tracking_id;
-    const result = await ParcelService.getParcelByTrackingId(id);
+    const decodedToken = req.user as JwtPayload;
+    const result = await ParcelService.getParcelByTrackingId(id, decodedToken);
     sendResponse(res, {
       statusCode: 201,
       success: true,
@@ -106,6 +108,7 @@ const getMyParcels = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     const query = req.query as Record<string, string>;
+
     const result = await ParcelService.getMyParcels(id, query);
     sendResponse(res, {
       success: true,

@@ -266,12 +266,29 @@ const confirmDelivery = async (id: string, delivered: boolean) => {
   }
 };
 
-const getParcelByTrackingId = async (id: string) => {
+const getParcelByTrackingId = async (id: string, token: JwtPayload) => {
+  const { role, userId } = token;
   const parcel = await Parcel.findOne({ trackingId: id });
+
   if (!parcel) {
     throw new AppError(httpStatus.BAD_REQUEST, "Parcel does not exist");
   }
-  return parcel;
+
+  if (role === Role.ADMIN || role === Role.SUPER_ADMIN) {
+    return parcel;
+  }
+  if (
+    parcel.sender === userId ||
+    parcel.receiver === userId ||
+    parcel.deliveryDriver === userId
+  ) {
+    return parcel;
+  } else {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "You are not authorized too see this parcel"
+    );
+  }
 };
 
 const getMyParcels = async (id: string, query: Record<string, string>) => {
