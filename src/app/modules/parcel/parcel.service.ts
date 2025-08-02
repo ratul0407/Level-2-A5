@@ -45,13 +45,14 @@ const createParcel = async (
         minDays + Math.floor(Math.random() * (maxDays - minDays + 1));
       deliveryDate = new Date(Date.now() + randomDays * 24 * 60 * 60 * 1000);
     }
-    const parcelData = {
+    const parcelData: Partial<IParcel> = {
       ...payload,
+      currentStatus: Status.REQUESTED,
       trackingEvents: [
         {
           status: Status.REQUESTED,
           updatedBy: token?.role,
-          at: Date.now(), // Use Date object for Mongoose
+          at: new Date(), // Use Date object for Mongoose
         },
       ],
       senderInfo: location,
@@ -154,7 +155,7 @@ const updateStatus = async (
           trackingEvents: {
             status: newStatus,
             updatedBy: token?.role,
-            at: Date.now(),
+            at: new Date(),
           },
         },
       },
@@ -173,7 +174,7 @@ const updateStatus = async (
           trackingEvents: {
             status: newStatus,
             updatedBy: token?.role,
-            at: Date.now(),
+            at: new Date(),
           },
         },
       },
@@ -217,12 +218,12 @@ const cancelParcel = async (
   const updatedParcel = await Parcel.findOneAndUpdate(
     { trackingId: id },
     {
-      status: cancelStatus,
+      currentStatus: cancelStatus,
       $push: {
         trackingEvents: {
-          status: cancelStatus,
+          currentStatus: cancelStatus,
           updatedBy: decodedToken?.role,
-          at: Date.now(),
+          at: new Date(),
         },
       },
     },
@@ -266,7 +267,7 @@ const confirmDelivery = async (
           trackingEvents: {
             status: Status.DELIVERED,
             updatedBy: token?.role,
-            at: Date.now(),
+            at: new Date(),
           },
         },
       },

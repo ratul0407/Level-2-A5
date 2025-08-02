@@ -22,6 +22,7 @@ router.post(
 router.patch(
   "/approve/:tracking_id",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  checkParcels(),
   ParcelController.approveParcel
 );
 
