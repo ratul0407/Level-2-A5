@@ -49,15 +49,24 @@ router.patch(
   checkParcels(),
   ParcelController.confirmDelivery
 );
-router.post(
-  "/cancel/:tracking_id",
-  checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.SENDER)
-);
-router.get("/:tracking_id", checkAuth(...Object.values(Role)));
-router.get("/me", checkAuth(...Object.values(Role)));
+//all parcels route for admin
 router.get(
   "/all-parcels",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   ParcelController.getAllParcels
+);
+
+//get a single parcel by tracking id
+router.get(
+  "/:tracking_id",
+  checkAuth(...Object.values(Role)),
+  ParcelController.getParcelByTrackingId
+);
+
+//get all parcels of a single user
+router.get(
+  "/my-parcels/:id",
+  checkAuth(...Object.values(Role)),
+  ParcelController.getMyParcels
 );
 export const ParcelRoutes = router;

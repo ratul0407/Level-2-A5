@@ -3,6 +3,7 @@ import { IParcel, ITracking, Status } from "./parcel.interface";
 import { addressSchema } from "../user/user.model";
 import { v4 as uuidv4 } from "uuid";
 import { getFormattedDate } from "../../utils/getFormattedDate";
+import { Role } from "../user/user.interface";
 const trackingSchema = new Schema<ITracking>(
   {
     status: {
@@ -10,6 +11,7 @@ const trackingSchema = new Schema<ITracking>(
       enum: Object.values(Status),
       required: true,
     },
+    updatedBy: Object.values(Role),
     at: Date,
   },
   {

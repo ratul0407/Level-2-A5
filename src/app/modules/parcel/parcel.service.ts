@@ -265,6 +265,41 @@ const confirmDelivery = async (id: string, delivered: boolean) => {
     return updatedParcel;
   }
 };
+
+const getParcelByTrackingId = async (id: string) => {
+  const parcel = await Parcel.findOne({ trackingId: id });
+  if (!parcel) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Parcel does not exist");
+  }
+  return parcel;
+};
+
+const getMyParcels = async (id: string, query: Record<string, string>) => {
+  const user = await User.findById(id);
+  console.log(query);
+  const queryBuilder = new QueryBuilder(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    Parcel.find({ _id: { $in: user!.parcels } }),
+    query
+  );
+
+  const parcels = await queryBuilder
+    .search(parcelSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    parcels.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    meta,
+    data,
+  };
+};
 export const ParcelService = {
   createParcel,
   approveParcel,
@@ -272,4 +307,6 @@ export const ParcelService = {
   cancelParcel,
   getAllParcels,
   confirmDelivery,
+  getParcelByTrackingId,
+  getMyParcels,
 };

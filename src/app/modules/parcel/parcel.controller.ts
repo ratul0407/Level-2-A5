@@ -88,6 +88,33 @@ const confirmDelivery = catchAsync(
     });
   }
 );
+
+const getParcelByTrackingId = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.tracking_id;
+    const result = await ParcelService.getParcelByTrackingId(id);
+    sendResponse(res, {
+      statusCode: 201,
+      success: true,
+      message: "Parcel retrieved successfully!",
+      data: result,
+    });
+  }
+);
+
+const getMyParcels = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const query = req.query as Record<string, string>;
+    const result = await ParcelService.getMyParcels(id, query);
+    sendResponse(res, {
+      success: true,
+      statusCode: 201,
+      message: "Successfully retrieved Users parcels",
+      data: result,
+    });
+  }
+);
 export const ParcelController = {
   createParcel,
   approveParcel,
@@ -95,4 +122,6 @@ export const ParcelController = {
   cancelParcel,
   getAllParcels,
   confirmDelivery,
+  getParcelByTrackingId,
+  getMyParcels,
 };

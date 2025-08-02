@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { IAddress } from "../user/user.interface";
+import { IAddress, Role } from "../user/user.interface";
 
 export enum Status {
   REQUESTED = "REQUESTED",
@@ -14,6 +14,7 @@ export enum Status {
 }
 export interface ITracking {
   status: Status;
+  updatedBy: Role;
   at: Date;
 }
 export interface IParcel {
