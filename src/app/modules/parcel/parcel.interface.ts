@@ -10,7 +10,7 @@ export enum Status {
   DELIVERED = "DELIVERED",
   CANCELLED = "CANCELLED",
   FAILED_DELIVERY = "FAILED_DELIVERY",
-  RESCHEDULED = "RESCHEDULED",
+  RETURNED = "RETURNED",
 }
 export interface ITracking {
   status: Status;

@@ -64,6 +64,7 @@ const cancelParcel = catchAsync(
     const id = req.params.tracking_id;
     const decodedToken = req.user;
     const { status } = req.body;
+    console.log(status);
     const result = await ParcelService.cancelParcel(id, status, decodedToken);
     sendResponse(res, {
       success: true,

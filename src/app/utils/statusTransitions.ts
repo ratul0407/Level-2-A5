@@ -11,11 +11,11 @@ export const statusTransitions: Record<Status, Status[]> = {
     Status.CANCELLED,
   ],
   [Status.FAILED_DELIVERY]: [
-    Status.RESCHEDULED,
+    Status.RETURNED,
     Status.OUT_FOR_DELIVERY,
     Status.CANCELLED,
   ],
-  [Status.RESCHEDULED]: [Status.OUT_FOR_DELIVERY, Status.CANCELLED],
-  [Status.DELIVERED]: [], // Terminal state
-  [Status.CANCELLED]: [], // Terminal state
+  [Status.RETURNED]: [],
+  [Status.DELIVERED]: [],
+  [Status.CANCELLED]: [Status.RETURNED],
 };

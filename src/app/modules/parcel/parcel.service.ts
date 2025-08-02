@@ -142,7 +142,7 @@ const updateStatus = async (
   if (!allowedStatus.includes(newStatus)) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      `Invalid status transition: ${currentState} to ${newStatus}`
+      `A parcel that is ${currentState} cannot be ${newStatus}`
     );
   }
   if (newStatus === Status.PICKED_UP) {
@@ -202,7 +202,7 @@ const cancelParcel = async (
     if (parcel.currentStatus === Status.OUT_FOR_DELIVERY) {
       throw new AppError(
         httpStatus.BAD_REQUEST,
-        "You cannot cancel your parcel now"
+        "You cannot cancel your parcel now it is already out for delivery"
       );
     }
   }
@@ -210,7 +210,7 @@ const cancelParcel = async (
     if (parcel.currentStatus === Status.DISPATCHED) {
       throw new AppError(
         httpStatus.BAD_REQUEST,
-        "You cannot cancel your parcel now"
+        "You cannot cancel your parcel now it is already dispatched"
       );
     }
   }
@@ -221,7 +221,7 @@ const cancelParcel = async (
       currentStatus: cancelStatus,
       $push: {
         trackingEvents: {
-          currentStatus: cancelStatus,
+          status: cancelStatus,
           updatedBy: decodedToken?.role,
           at: new Date(),
         },

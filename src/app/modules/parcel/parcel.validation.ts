@@ -18,5 +18,12 @@ export const createParcelZod = z.object({
 });
 
 export const parcelStatusZod = z.object({
-  status: z.enum(Object.values(Status)),
+  status: z.enum([
+    Status.PICKED_UP,
+    Status.DISPATCHED,
+    Status.OUT_FOR_DELIVERY,
+    Status.DELIVERED,
+    Status.FAILED_DELIVERY,
+    Status.RETURNED,
+  ]),
 });
