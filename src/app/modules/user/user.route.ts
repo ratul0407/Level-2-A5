@@ -22,7 +22,7 @@ router.patch(
 );
 
 router.patch(
-  "/block",
+  "/change-activity",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   UserController.changeUserActivity
 );
