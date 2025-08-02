@@ -6,11 +6,16 @@ import AppError from "../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
 export const validateParcels =
   () => async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { sender, receiver } = req.body;
-      const senderUser = await User.findById(sender);
+    const isUserExists = await User.findById(req.user?.userId);
 
-      if (senderUser?.role !== Role.SENDER && senderUser?.role !== Role.ADMIN) {
+    try {
+      const { receiver } = req.body;
+
+      if (
+        isUserExists?.role !== Role.SENDER &&
+        isUserExists?.role !== Role.ADMIN &&
+        isUserExists?.role !== Role.SUPER_ADMIN
+      ) {
         throw new AppError(
           httpStatus.UNAUTHORIZED,
           "You are not a sender, you cannot make parcel requests"
@@ -26,19 +31,19 @@ export const validateParcels =
           `${receiverUser?.name} is not a receiver, He cannot receive a parcel`
         );
       }
-      if (!senderUser?.address) {
+      if (!isUserExists?.address) {
         throw new AppError(
           httpStatus.BAD_REQUEST,
           "Please update your address to make a parcel request"
         );
       }
-      if (!senderUser?.phone) {
+      if (!isUserExists?.phone) {
         throw new AppError(
           httpStatus.BAD_REQUEST,
           "Please add your phone number to make a parcel request"
         );
       }
-      const senderInfo = senderUser.address;
+      const senderInfo = isUserExists.address;
       (req as any).senderInfo = senderInfo;
       next();
     } catch (error) {

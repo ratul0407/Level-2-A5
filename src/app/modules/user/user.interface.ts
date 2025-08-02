@@ -47,5 +47,5 @@ export interface IUser {
   isActive?: IsActive;
   isDeleted?: boolean;
   isVerified?: boolean;
-  parcels?: Types.ObjectId[];
+  parcels?: string[];
 }

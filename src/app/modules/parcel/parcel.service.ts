@@ -48,6 +48,7 @@ const createParcel = async (
     const parcelData: Partial<IParcel> = {
       ...payload,
       currentStatus: Status.REQUESTED,
+      sender: token?.userId,
       trackingEvents: [
         {
           status: Status.REQUESTED,
@@ -65,7 +66,7 @@ const createParcel = async (
     await User.findByIdAndUpdate(
       parcelData.sender,
       {
-        $push: { parcels: createdParcel[0]._id },
+        $push: { parcels: createdParcel[0].trackingId },
       },
       { new: true, session }
     );
@@ -73,7 +74,7 @@ const createParcel = async (
     await User.findByIdAndUpdate(
       parcelData.receiver,
       {
-        $push: { parcels: createdParcel[0]._id },
+        $push: { parcels: createdParcel[0].trackingId },
       },
       { new: true }
     );
@@ -97,27 +98,42 @@ const approveParcel = async (
   if (!isParcelExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "No Parcel found");
   }
-  const driverUser = await User.findById(deliveryDriver);
-  if (!driverUser) {
-    throw new AppError(httpStatus.BAD_REQUEST, "The driver does not exist");
-  }
-  const parcel = await Parcel.findOneAndUpdate(
-    { trackingId: id },
-    {
-      currentStatus: Status.APPROVED,
-      deliveryDriver: deliveryDriver,
-      $push: {
-        trackingEvents: {
-          status: Status.APPROVED,
-          updatedBy: token?.role,
-          at: Date.now(),
+  const session = await Parcel.startSession();
+  try {
+    const driverUser = await User.findById(deliveryDriver);
+    if (!driverUser) {
+      throw new AppError(httpStatus.BAD_REQUEST, "The driver does not exist");
+    }
+    const parcel = await Parcel.findOneAndUpdate(
+      { trackingId: id },
+      {
+        currentStatus: Status.APPROVED,
+        deliveryDriver: deliveryDriver,
+        $push: {
+          trackingEvents: {
+            status: Status.APPROVED,
+            updatedBy: token?.role,
+            at: Date.now(),
+          },
         },
       },
-    },
-    { new: true, runValidators: true }
-  );
+      { new: true, runValidators: true, session }
+    );
 
-  return parcel;
+    await User.findByIdAndUpdate(
+      deliveryDriver,
+      {
+        $push: { parcels: parcel!.trackingId },
+      },
+      { session }
+    );
+    return parcel;
+  } catch (error) {
+    session.abortTransaction();
+    console.log(error);
+  } finally {
+    session.endSession();
+  }
 };
 
 const updateStatus = async (
@@ -308,10 +324,11 @@ const getParcelByTrackingId = async (id: string, token: JwtPayload) => {
     return parcel;
   }
   if (
-    parcel.sender === userId ||
-    parcel.receiver === userId ||
-    parcel.deliveryDriver === userId
+    parcel.sender.toString() === userId ||
+    parcel.receiver.toString() === userId ||
+    parcel.deliveryDriver?.toString() === userId
   ) {
+    console.log("I was here");
     return parcel;
   } else {
     throw new AppError(
@@ -326,10 +343,9 @@ const getMyParcels = async (id: string, query: Record<string, string>) => {
   console.log(query);
   const queryBuilder = new QueryBuilder(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    Parcel.find({ _id: { $in: user!.parcels } }),
+    Parcel.find({ trackingId: { $in: user!.parcels } }),
     query
   );
-
   const parcels = await queryBuilder
     .search(parcelSearchableFields)
     .filter()
@@ -337,15 +353,8 @@ const getMyParcels = async (id: string, query: Record<string, string>) => {
     .fields()
     .paginate();
 
-  const [data, meta] = await Promise.all([
-    parcels.build(),
-    queryBuilder.getMeta(),
-  ]);
-
-  return {
-    meta,
-    data,
-  };
+  const [data, meta] = await Promise.all([parcels.build(), parcels.getMeta()]);
+  return { meta, data };
 };
 export const ParcelService = {
   createParcel,
