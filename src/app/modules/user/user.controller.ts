@@ -41,7 +41,8 @@ const updateUser = catchAsync(
 const getMyParcels = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const result = await UserService.getMyParcels(id);
+    const query = req.query as Record<string, string>;
+    const result = await UserService.getMyParcels(id, query);
     sendResponse(res, {
       success: true,
       statusCode: 201,

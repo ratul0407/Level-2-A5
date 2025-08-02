@@ -7,6 +7,8 @@ import AppError from "../../errorHelpers/AppError";
 import { JwtPayload } from "jsonwebtoken";
 import httpStatus from "http-status-codes";
 import { Parcel } from "../parcel/parcel.model";
+import { QueryBuilder } from "../../utils/queryBuilder";
+import { parcelSearchableFields } from "../parcel/parcel.constant";
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
   const hashedPassword = await bcryptjs.hash(
@@ -72,11 +74,30 @@ const updateUser = async (
   return updatedUser;
 };
 
-const getMyParcels = async (id: string) => {
+const getMyParcels = async (id: string, query: Record<string, string>) => {
   const user = await User.findById(id);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const parcels = await Parcel.find({ _id: { $in: user!.parcels } });
-  return parcels;
+  console.log(query);
+  const queryBuilder = new QueryBuilder(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    Parcel.find({ _id: { $in: user!.parcels } }),
+    query
+  );
+
+  const parcels = await queryBuilder
+    .search(parcelSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate()
+    .build();
+  // const [data, meta] = await Promise.all([
+  //   parcels.build(),
+  //   queryBuilder.getMeta(),
+  // ]);
+  // console.log(data);
+  return {
+    parcels,
+  };
 };
 export const UserService = {
   createUser,
