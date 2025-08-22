@@ -3,7 +3,10 @@ import bcryptjs from "bcryptjs";
 import { User } from "../user/user.model";
 import AppError from "../../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
-import { createUserTokens } from "../../utils/userTokens";
+import {
+  createNewAccessTokenWithRefreshToken,
+  createUserTokens,
+} from "../../utils/userTokens";
 const credentialsLogin = async (payload: Partial<IUser>) => {
   const { email, password } = payload;
   const isUserExists = await User.findOne({ email });
@@ -25,7 +28,13 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
     refreshToken,
   };
 };
-
+const getNewAccessToken = async (refreshToken: string) => {
+  const newAccessToken = await createNewAccessTokenWithRefreshToken(
+    refreshToken
+  );
+  return { accessToken: newAccessToken };
+};
 export const AuthService = {
   credentialsLogin,
+  getNewAccessToken,
 };
