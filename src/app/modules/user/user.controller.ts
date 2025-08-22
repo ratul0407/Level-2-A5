@@ -4,6 +4,7 @@ import { catchAsync } from "../../utils/catchAsync";
 import { UserService } from "./user.service";
 import { sendResponse } from "../../utils/sendResponse";
 import { ITokens, setTokenCookie } from "../../utils/setTokenCookie";
+import { JwtPayload } from "jsonwebtoken";
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -51,8 +52,22 @@ const changeUserActivity = catchAsync(
     });
   }
 );
+
+const getMe = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { userId } = req.user as JwtPayload;
+    const result = await UserService.getMe(userId);
+    sendResponse(res, {
+      success: true,
+      statusCode: 201,
+      message: "User retrieved successfully!",
+      data: result,
+    });
+  }
+);
 export const UserController = {
   createUser,
   updateUser,
   changeUserActivity,
+  getMe,
 };

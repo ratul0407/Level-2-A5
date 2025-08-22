@@ -6,6 +6,7 @@ interface envConfig {
   PORT: string;
   DB_URL: string;
   NODE_ENV: "development" | "production";
+  FRONTEND_URL: string;
   BCRYPT_SALT_ROUND: string;
   JWT_ACCESS_SECRET: string;
   JWT_ACCESS_EXPIRES_IN: string;
@@ -39,6 +40,7 @@ const loadEnvVariables = (): envConfig => {
     "SUPER_ADMIN_CITY",
     "SUPER_ADMIN_ZIP",
     "SUPER_ADMIN_STREET",
+    "FRONTEND_URL",
   ];
   requiredEnvVariables.forEach((key) => {
     if (!process.env[key]) {
@@ -62,6 +64,7 @@ const loadEnvVariables = (): envConfig => {
     SUPER_ADMIN_CITY: process.env.SUPER_ADMIN_CITY as string,
     SUPER_ADMIN_ZIP: process.env.SUPER_ADMIN_ZIP as string,
     SUPER_ADMIN_STREET: process.env.SUPER_ADMIN_STREET as string,
+    FRONTEND_URL: process.env.FRONTEND_URL as string,
   };
 };
 

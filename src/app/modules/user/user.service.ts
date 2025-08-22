@@ -75,8 +75,13 @@ const changeUserActivity = async (id: string, isActive: IsActive) => {
   const user = await User.findByIdAndUpdate(id, { isActive: isActive });
   return user;
 };
+const getMe = async (id: string) => {
+  const user = await User.findById(id).select("-password");
+  return { data: user };
+};
 export const UserService = {
   createUser,
   updateUser,
   changeUserActivity,
+  getMe,
 };

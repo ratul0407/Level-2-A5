@@ -10,7 +10,6 @@ const router = Router();
 router.post(
   "/register",
   validateRequest(createUserZod),
-
   UserController.createUser
 );
 
@@ -27,4 +26,5 @@ router.patch(
   validateRequest(userActivity),
   UserController.changeUserActivity
 );
+router.get("/me", checkAuth(...Object.values(Role)), UserController.getMe);
 export const UserRoutes = router;
