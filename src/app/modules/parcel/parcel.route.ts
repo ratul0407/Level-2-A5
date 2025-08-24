@@ -56,6 +56,12 @@ router.get(
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   ParcelController.getAllParcels
 );
+//get all parcels of a single user
+router.get(
+  "/my-parcels/",
+  checkAuth(...Object.values(Role)),
+  ParcelController.getMyParcels
+);
 
 //get a single parcel by tracking id
 router.get(
@@ -64,10 +70,9 @@ router.get(
   ParcelController.getParcelByTrackingId
 );
 
-//get all parcels of a single user
-router.get(
-  "/my-parcels/:id",
-  checkAuth(...Object.values(Role)),
-  ParcelController.getMyParcels
-);
+// router.get(
+//   "/my-parcels",
+//   checkAuth(...Object.values(Role)),
+//   ParcelController.myAllParcels
+// );
 export const ParcelRoutes = router;

@@ -123,7 +123,7 @@ const getParcelByTrackingId = catchAsync(
 
 const getMyParcels = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
+    const id = req.user.userId;
     const query = req.query as Record<string, string>;
 
     const result = await ParcelService.getMyParcels(id, query);
@@ -135,6 +135,20 @@ const getMyParcels = catchAsync(
     });
   }
 );
+// const myAllParcels = catchAsync(
+async (req: Request, res: Response, next: NextFunction) => {
+  const id = req.params.id;
+  const query = req.query as Record<string, string>;
+
+  const result = await ParcelService.getMyParcels(id, query);
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: "Successfully retrieved Users parcels",
+    data: result,
+  });
+};
+// );
 export const ParcelController = {
   createParcel,
   approveParcel,
@@ -144,4 +158,5 @@ export const ParcelController = {
   confirmDelivery,
   getParcelByTrackingId,
   getMyParcels,
+  // myAllParcels,
 };

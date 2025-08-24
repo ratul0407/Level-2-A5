@@ -314,7 +314,8 @@ const getParcelByTrackingId = async (id: string, token: JwtPayload) => {
 
 const getMyParcels = async (id: string, query: Record<string, string>) => {
   const user = await User.findById(id);
-  console.log(query);
+
+  console.log(user);
   const queryBuilder = new QueryBuilder(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     Parcel.find({ trackingId: { $in: user!.parcels } }),
