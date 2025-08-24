@@ -10,13 +10,14 @@ export const validateParcels =
     const isUserExists = await User.findById(req.user?.userId);
 
     try {
+      console.log(req.body);
       const { receiver } = req.body;
+      console.log(receiver);
       const receiverUser = await User.findOne({ email: receiver });
       console.log(receiverUser, "result");
       console.log("I was here");
       if (!receiverUser) {
         throw new AppError(401, "Receiver does not exist");
-        return;
       }
 
       if (

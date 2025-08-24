@@ -20,23 +20,6 @@ const createParcel = async (
 
   session.startTransaction();
   try {
-    const weight = payload.weight;
-    let amount;
-    if (payload.sameDivision) {
-      if (weight) {
-        amount = Math.ceil(60 + weight * 5);
-      }
-    } else {
-      if (weight) {
-        amount = Math.ceil(100 + weight * 7);
-      }
-    }
-    let deliveryDate: Date;
-    if (payload.sameDivision) {
-      deliveryDate = new Date(Date.now() + 7);
-    } else {
-      deliveryDate = new Date(Date.now() + 14);
-    }
     const parcelData: Partial<IParcel> = {
       ...payload,
       currentStatus: Status.REQUESTED,
@@ -50,8 +33,6 @@ const createParcel = async (
         },
       ],
       senderInfo: location,
-      estimatedDeliveryDate: deliveryDate,
-      cost: amount,
     };
     console.log(parcelData);
     const createdParcel = await Parcel.create([parcelData], { session });

@@ -15,6 +15,8 @@ export const createParcelZod = z.object({
   }),
   sameDivision: z.boolean(),
   weight: z.number(),
+  cost: z.number(),
+  estimatedDeliveryDate: z.string(),
 });
 
 export const parcelStatusZod = z.object({
