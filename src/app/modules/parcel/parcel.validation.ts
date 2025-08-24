@@ -6,7 +6,7 @@ export const createParcelZod = z.object({
   name: z.string({ error: "Name must be a string" }),
   trackingId: z.string().optional(),
 
-  receiver: z.string({ error: "receiver must be a string property" }),
+  receiver: z.email({ error: "receiver must be a string property" }),
   deliveryLocation: z.object({
     division: z.enum(Divisions),
     city: z.string(),

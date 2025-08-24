@@ -6,10 +6,18 @@ import AppError from "../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
 export const validateParcels =
   () => async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req?.user, "from validate parcels");
     const isUserExists = await User.findById(req.user?.userId);
 
     try {
       const { receiver } = req.body;
+      const receiverUser = await User.findOne({ email: receiver });
+      console.log(receiverUser, "result");
+      console.log("I was here");
+      if (!receiverUser) {
+        throw new AppError(401, "Receiver does not exist");
+        return;
+      }
 
       if (
         isUserExists?.role !== Role.SENDER &&
@@ -21,14 +29,14 @@ export const validateParcels =
           "You are not a sender, you cannot make parcel requests"
         );
       }
-      const receiverUser = await User.findById(receiver);
+      // const receiverUser = await User.findById(receiver);
       if (
         receiverUser?.role !== Role.RECEIVER &&
         receiverUser?.role !== Role.ADMIN
       ) {
         throw new AppError(
           httpStatus.UNAUTHORIZED,
-          `${receiverUser?.name} is not a receiver, He cannot receive a parcel`
+          `User with this email is not a receiver, He cannot receive a parcel`
         );
       }
       if (!isUserExists?.address) {

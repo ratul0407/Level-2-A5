@@ -15,8 +15,8 @@ const createParcel = async (
   location: IAddress,
   token: JwtPayload
 ) => {
-  console.log(token);
   const session = await Parcel.startSession();
+  const receiver = await User.findOne({ email: payload.receiver });
 
   session.startTransaction();
   try {
@@ -49,6 +49,7 @@ const createParcel = async (
       ...payload,
       currentStatus: Status.REQUESTED,
       sender: token?.userId,
+      receiver: receiver?._id,
       trackingEvents: [
         {
           status: Status.REQUESTED,
@@ -68,7 +69,7 @@ const createParcel = async (
       {
         $push: { parcels: createdParcel[0].trackingId },
       },
-      { new: true, session }
+      { new: true, runValidators: true, session }
     );
 
     await User.findByIdAndUpdate(
