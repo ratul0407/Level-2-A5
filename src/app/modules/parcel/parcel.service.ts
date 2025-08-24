@@ -33,17 +33,9 @@ const createParcel = async (
     }
     let deliveryDate: Date;
     if (payload.sameDivision) {
-      const minDays = 4;
-      const maxDays = 8;
-      const randomDays =
-        minDays + Math.floor(Math.random() * (maxDays - minDays + 1));
-      deliveryDate = new Date(Date.now() + randomDays * 24 * 60 * 60 * 1000);
+      deliveryDate = new Date(Date.now() + 7);
     } else {
-      const minDays = 7;
-      const maxDays = 14;
-      const randomDays =
-        minDays + Math.floor(Math.random() * (maxDays - minDays + 1));
-      deliveryDate = new Date(Date.now() + randomDays * 24 * 60 * 60 * 1000);
+      deliveryDate = new Date(Date.now() + 14);
     }
     const parcelData: Partial<IParcel> = {
       ...payload,
