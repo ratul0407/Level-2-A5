@@ -1,4 +1,4 @@
-import { IUser } from "../user/user.interface";
+import { IsActive, IUser } from "../user/user.interface";
 import bcryptjs from "bcryptjs";
 import { User } from "../user/user.model";
 import AppError from "../../errorHelpers/AppError";
@@ -20,6 +20,10 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
 
   if (!isPasswordMatched) {
     throw new AppError(httpStatus.BAD_REQUEST, "Password does not match");
+  }
+
+  if (isUserExists.isActive === IsActive.BLOCKED) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User is Blocked");
   }
   const { accessToken, refreshToken } = createUserTokens(isUserExists);
 

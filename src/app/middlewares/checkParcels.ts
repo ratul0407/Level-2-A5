@@ -7,9 +7,6 @@ export const checkParcels =
   () => async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.tracking_id;
-
-      console.log(req.body, "body");
-      console.log(id);
       const parcel = await Parcel.findOne({ trackingId: id });
       if (!parcel) {
         throw new AppError(httpStatus.BAD_REQUEST, "Parcel does not exist");
