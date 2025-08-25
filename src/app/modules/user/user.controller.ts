@@ -65,9 +65,27 @@ const getMe = catchAsync(
     });
   }
 );
+const getAllUsers = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const query = req.query;
+    const result = await UserService.getAllUsers(
+      query as Record<string, string>
+    );
+
+    sendResponse(res, {
+      statusCode: 201,
+      message: "All users retrieved successfully!",
+      data: result.data,
+      success: true,
+      meta: result.meta,
+    });
+  }
+);
+
 export const UserController = {
   createUser,
   updateUser,
   changeUserActivity,
   getMe,
+  getAllUsers,
 };

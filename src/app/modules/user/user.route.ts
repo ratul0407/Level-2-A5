@@ -27,4 +27,10 @@ router.patch(
   UserController.changeUserActivity
 );
 router.get("/me", checkAuth(...Object.values(Role)), UserController.getMe);
+
+router.get(
+  "/all-users",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  UserController.getAllUsers
+);
 export const UserRoutes = router;

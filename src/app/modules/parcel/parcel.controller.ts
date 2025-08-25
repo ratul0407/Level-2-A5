@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { ParcelService } from "./parcel.service";
 import { sendResponse } from "../../utils/sendResponse";
-import { Jwt, JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 
 const createParcel = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -64,7 +64,7 @@ const cancelParcel = catchAsync(
     const id = req.params.tracking_id;
     const decodedToken = req.user;
     const { status } = req.body;
-    console.log(status);
+
     const result = await ParcelService.cancelParcel(id, status, decodedToken);
     sendResponse(res, {
       success: true,
@@ -135,20 +135,6 @@ const getMyParcels = catchAsync(
     });
   }
 );
-// const myAllParcels = catchAsync(
-async (req: Request, res: Response, next: NextFunction) => {
-  const id = req.params.id;
-  const query = req.query as Record<string, string>;
-
-  const result = await ParcelService.getMyParcels(id, query);
-  sendResponse(res, {
-    success: true,
-    statusCode: 201,
-    message: "Successfully retrieved Users parcels",
-    data: result,
-  });
-};
-// );
 export const ParcelController = {
   createParcel,
   approveParcel,
@@ -158,5 +144,4 @@ export const ParcelController = {
   confirmDelivery,
   getParcelByTrackingId,
   getMyParcels,
-  // myAllParcels,
 };

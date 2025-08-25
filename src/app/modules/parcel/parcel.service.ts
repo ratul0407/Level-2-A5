@@ -227,10 +227,9 @@ const cancelParcel = async (
 
 const getAllParcels = async (query: Record<string, string>) => {
   const allParcels = Parcel.find()
-    .populate({ path: "sender", select: "name" })
-    .populate({ path: "receiver", select: "name" })
-    .populate({ path: "deliveryDriver", select: "name" });
-  console.log(allParcels);
+    .populate({ path: "sender", select: "email" })
+    .populate({ path: "receiver", select: "email" })
+    .populate({ path: "deliveryDriver", select: "email" });
   const queryBuilder = new QueryBuilder(allParcels, query);
   const parcels = await queryBuilder
     .search(parcelSearchableFields)

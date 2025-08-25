@@ -6,6 +6,8 @@ import { createUserTokens } from "../../utils/userTokens";
 import AppError from "../../errorHelpers/AppError";
 import { JwtPayload } from "jsonwebtoken";
 import httpStatus from "http-status-codes";
+import { QueryBuilder } from "../../utils/queryBuilder";
+import { userSearchableFields } from "./user.constant";
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
   const hashedPassword = await bcryptjs.hash(
@@ -79,9 +81,28 @@ const getMe = async (id: string) => {
   const user = await User.findById(id).select("-password");
   return { data: user };
 };
+const getAllUsers = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(User.find(), query);
+  const users = await queryBuilder
+    .search(userSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    users.build(),
+    queryBuilder.getMeta(),
+  ]);
+  return {
+    data,
+    meta,
+  };
+};
 export const UserService = {
   createUser,
   updateUser,
   changeUserActivity,
   getMe,
+  getAllUsers,
 };
