@@ -48,4 +48,5 @@ export interface IUser {
   isDeleted?: boolean;
   isVerified?: boolean;
   parcels?: string[];
+  createdAt?: Date;
 }

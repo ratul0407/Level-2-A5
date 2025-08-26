@@ -336,6 +336,7 @@ const getMyParcels = async (id: string, query: Record<string, string>) => {
   const [data, meta] = await Promise.all([parcels.build(), parcels.getMeta()]);
   return { meta, data };
 };
+
 export const ParcelService = {
   createParcel,
   approveParcel,

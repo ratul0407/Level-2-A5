@@ -70,9 +70,4 @@ router.get(
   ParcelController.getParcelByTrackingId
 );
 
-// router.get(
-//   "/my-parcels",
-//   checkAuth(...Object.values(Role)),
-//   ParcelController.myAllParcels
-// );
 export const ParcelRoutes = router;
