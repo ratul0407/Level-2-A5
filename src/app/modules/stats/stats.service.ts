@@ -4,7 +4,8 @@ import { IsActive } from "../user/user.interface";
 import { User } from "../user/user.model";
 const now = new Date();
 const sevenDaysAgo = new Date(now).setDate(now.getDate() - 7);
-const thirtyDaysAgo = new Date(now).setDate(now.getDate() - 30);
+const thirtyDaysAgo = new Date();
+thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 const getParcelStats = async () => {
   const totalParcelsPromise = Parcel.countDocuments({});
   const totalParcelCreatedInLast7DaysPromise = Parcel.countDocuments({
@@ -34,6 +35,31 @@ const getParcelStats = async () => {
       $get: thirtyDaysAgo,
     },
   });
+  //   const parcelsCreatedOverTheLast30Days = Parcel.aggregate([
+  //     {
+  //       $match: {
+  //         createdAt: {$gte: thirtyDaysAgo },
+  //       },
+  //       {
+  //         $group: {
+  //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt"}},
+  //             count: {$sum: 1}
+  //         }
+  //       }
+  //     },
+  //   ]);
+  const parcelsCreatedOverTheLast30DaysPromise = Parcel.aggregate([
+    { $match: { createdAt: { $gte: thirtyDaysAgo } } },
+    {
+      $group: {
+        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { _id: 1 },
+    },
+  ]);
   const [
     totalParcels,
     totalParcelCreatedInLast7Days,
@@ -43,6 +69,7 @@ const getParcelStats = async () => {
     totalReturnedParcels,
     totalApprovedParcels,
     totalParcelDeliveredInLast30Days,
+    parcelsCreatedOverTheLast30Days,
   ] = await Promise.all([
     totalParcelsPromise,
     totalParcelCreatedInLast7DaysPromise,
@@ -52,6 +79,7 @@ const getParcelStats = async () => {
     totalReturnedParcelsPromise,
     totalApprovedParcelsPromise,
     totalParcelDeliveredInLast30DaysPromise,
+    parcelsCreatedOverTheLast30DaysPromise,
   ]);
   return {
     totalParcels,
@@ -62,6 +90,7 @@ const getParcelStats = async () => {
     totalReturnedParcels,
     totalApprovedParcels,
     totalParcelDeliveredInLast30Days,
+    parcelsCreatedOverTheLast30Days,
   };
 };
 
@@ -96,7 +125,18 @@ const getUserStats = async () => {
       },
     },
   ]);
-
+  const usersCreatedOverTheLast30DaysPromise = User.aggregate([
+    { $match: { createdAt: { $gte: thirtyDaysAgo } } },
+    {
+      $group: {
+        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { _id: 1 },
+    },
+  ]);
   const [
     totalUsers,
     totalActiveUsers,
@@ -105,6 +145,7 @@ const getUserStats = async () => {
     newUsersInLast7Days,
     newUsersInLast30Days,
     usersByRole,
+    usersCreatedOverTheLast30Days,
   ] = await Promise.all([
     totalUserPromise,
     totalActiveUsersPromise,
@@ -113,6 +154,7 @@ const getUserStats = async () => {
     newUsersInLast7DaysPromise,
     newUsersInLast30DaysPromise,
     usersByRolePromise,
+    usersCreatedOverTheLast30DaysPromise,
   ]);
   return {
     totalUsers,
@@ -122,6 +164,7 @@ const getUserStats = async () => {
     newUsersInLast7Days,
     newUsersInLast30Days,
     usersByRole,
+    usersCreatedOverTheLast30Days,
   };
 };
 export const StatsService = {

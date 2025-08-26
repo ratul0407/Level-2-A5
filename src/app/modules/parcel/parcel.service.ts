@@ -318,9 +318,6 @@ const getParcelByTrackingId = async (id: string, token: JwtPayload) => {
 
 const getMyParcels = async (id: string, query: Record<string, string>) => {
   const user = await User.findById(id);
-
-  console.log(query);
-
   const allParcels = Parcel.find({ trackingId: { $in: user!.parcels } })
     .populate({ path: "sender", select: "email" })
     .populate({ path: "receiver", select: "email" })
