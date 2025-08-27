@@ -188,23 +188,21 @@ const cancelParcel = async (
     throw new AppError(httpStatus.BAD_REQUEST, "Parcel does not exist");
   }
 
-  if (decodedToken.role === Role.RECEIVER) {
-    if (parcel.currentStatus === Status.OUT_FOR_DELIVERY) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        "You cannot cancel your parcel now it is already out for delivery"
-      );
-    }
-  }
-  if (decodedToken.role === Role.SENDER) {
-    if (parcel.currentStatus === Status.DISPATCHED) {
+  if (
+    decodedToken.role === Role.RECEIVER ||
+    decodedToken.role === Role.RECEIVER
+  ) {
+    if (
+      parcel?.trackingEvents?.some(
+        (event) => event.status === Status.DISPATCHED
+      )
+    ) {
       throw new AppError(
         httpStatus.BAD_REQUEST,
         "You cannot cancel your parcel now it is already dispatched"
       );
     }
   }
-
   const updatedParcel = await Parcel.findOneAndUpdate(
     { trackingId: id },
     {
