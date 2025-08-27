@@ -10,7 +10,7 @@ const getParcelStats = catchAsync(
     sendResponse(res, {
       success: true,
       statusCode: 201,
-      message: "User statistics retrieved",
+      message: "Parcel statistics retrieved",
       data: result,
     });
   }
