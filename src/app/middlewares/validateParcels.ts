@@ -6,16 +6,13 @@ import AppError from "../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
 export const validateParcels =
   () => async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req?.user, "from validate parcels");
     const isUserExists = await User.findById(req.user?.userId);
 
     try {
-      console.log(req.body);
       const { receiver } = req.body;
-      console.log(receiver);
+
       const receiverUser = await User.findOne({ email: receiver });
-      console.log(receiverUser, "result");
-      console.log("I was here");
+
       if (!receiverUser) {
         throw new AppError(401, "Receiver does not exist");
       }
@@ -56,7 +53,6 @@ export const validateParcels =
       (req as any).senderInfo = senderInfo;
       next();
     } catch (error) {
-      console.log(error);
       next(error);
     }
   };

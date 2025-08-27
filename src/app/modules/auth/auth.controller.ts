@@ -26,7 +26,8 @@ const credentialsLogin = catchAsync(
 
 const getNewAccessToken = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken = req?.cookies?.refreshToken;
+    console.log(refreshToken);
     if (!refreshToken) {
       throw new AppError(
         httpStatus.BAD_REQUEST,
@@ -34,6 +35,7 @@ const getNewAccessToken = catchAsync(
       );
     }
     const tokenInfo = await AuthService.getNewAccessToken(refreshToken);
+
     setTokenCookie(res, tokenInfo);
     sendResponse(res, {
       statusCode: httpStatus.OK,

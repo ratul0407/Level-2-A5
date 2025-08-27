@@ -30,24 +30,6 @@ const getParcelStats = async () => {
   const totalApprovedParcelsPromise = Parcel.countDocuments({
     currentStatus: Status.APPROVED,
   });
-  // const totalParcelDeliveredInLast30DaysPromise = Parcel.countDocuments({
-  //   deliveryDate: {
-  //     $get: thirtyDaysAgo,
-  //   },
-  // });
-  //   const parcelsCreatedOverTheLast30Days = Parcel.aggregate([
-  //     {
-  //       $match: {
-  //         createdAt: {$gte: thirtyDaysAgo },
-  //       },
-  //       {
-  //         $group: {
-  //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt"}},
-  //             count: {$sum: 1}
-  //         }
-  //       }
-  //     },
-  //   ]);
   const parcelsCreatedOverTheLast30DaysPromise = Parcel.aggregate([
     { $match: { createdAt: { $gte: thirtyDaysAgo } } },
     {
@@ -69,7 +51,6 @@ const getParcelStats = async () => {
     totalReturnedParcels,
     totalApprovedParcels,
     totalParcelDeliveredInLast30Days,
-    // parcelsCreatedOverTheLast30Days
   ] = await Promise.all([
     totalParcelsPromise,
     totalParcelCreatedInLast7DaysPromise,
@@ -78,7 +59,7 @@ const getParcelStats = async () => {
     totalCancelledParcelsPromise,
     totalReturnedParcelsPromise,
     totalApprovedParcelsPromise,
-    // totalParcelDeliveredInLast30DaysPromise,
+
     parcelsCreatedOverTheLast30DaysPromise,
   ]);
   return {
@@ -90,7 +71,6 @@ const getParcelStats = async () => {
     totalReturnedParcels,
     totalApprovedParcels,
     totalParcelDeliveredInLast30Days,
-    // parcelsCreatedOverTheLast30Days,
   };
 };
 

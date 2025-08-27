@@ -84,7 +84,7 @@ const cancelParcel = catchAsync(
 const getAllParcels = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query as Record<string, string>;
-    console.log(query);
+
     const result = await ParcelService.getAllParcels(query);
     sendResponse(res, {
       success: true,

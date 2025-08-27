@@ -35,7 +35,7 @@ const createParcel = async (
       ],
       senderInfo: location,
     };
-    console.log(parcelData);
+
     const createdParcel = await Parcel.create([parcelData], { session });
 
     await User.findByIdAndUpdate(
@@ -131,7 +131,7 @@ const updateStatus = async (
   }
   const currentState =
     parcel.trackingEvents![parcel.trackingEvents!.length - 1]?.status;
-  console.log(currentState);
+
   if (!currentState) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
@@ -140,7 +140,6 @@ const updateStatus = async (
   }
   const allowedStatus = statusTransitions[currentState];
   if (!allowedStatus.includes(newStatus)) {
-    console.log(allowedStatus, currentState, newStatus);
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `A parcel that is ${currentState} cannot be ${newStatus}`
@@ -317,7 +316,6 @@ const getParcelByTrackingId = async (id: string, token: JwtPayload) => {
     parcel.receiver.toString() === userId ||
     parcel.deliveryDriver?.toString() === userId
   ) {
-    console.log("I was here");
     return parcel;
   } else {
     throw new AppError(
