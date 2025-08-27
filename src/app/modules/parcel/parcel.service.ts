@@ -29,7 +29,8 @@ const createParcel = async (
         {
           status: Status.REQUESTED,
           updatedBy: token?.role,
-          at: new Date(), // Use Date object for Mongoose
+          at: new Date(),
+          note: "Requested parcel",
         },
       ],
       senderInfo: location,
@@ -88,6 +89,7 @@ const approveParcel = async (
             status: Status.APPROVED,
             updatedBy: token?.role,
             at: Date.now(),
+            note: `Admin has assigned to ${driverUser?.name}`,
           },
         },
       },
@@ -113,6 +115,7 @@ const approveParcel = async (
 const updateStatus = async (
   id: string,
   newStatus: Status,
+  note: string,
   token: JwtPayload
 ) => {
   const parcel = await Parcel.findOne({ trackingId: id });
@@ -130,6 +133,7 @@ const updateStatus = async (
   }
   const allowedStatus = statusTransitions[currentState];
   if (!allowedStatus.includes(newStatus)) {
+    console.log(allowedStatus, currentState, newStatus);
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `A parcel that is ${currentState} cannot be ${newStatus}`
@@ -146,6 +150,7 @@ const updateStatus = async (
             status: newStatus,
             updatedBy: token?.role,
             at: new Date(),
+            note,
           },
         },
       },
@@ -165,6 +170,7 @@ const updateStatus = async (
             status: newStatus,
             updatedBy: token?.role,
             at: new Date(),
+            note,
           },
         },
       },
@@ -190,7 +196,7 @@ const cancelParcel = async (
 
   if (
     decodedToken.role === Role.RECEIVER ||
-    decodedToken.role === Role.RECEIVER
+    decodedToken.role === Role.SENDER
   ) {
     if (
       parcel?.trackingEvents?.some(

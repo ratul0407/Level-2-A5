@@ -48,8 +48,14 @@ const updateStatus = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.tracking_id;
     const { status } = req.body;
+    const { note } = req.body;
     const decodedToken = req.user as JwtPayload;
-    const result = await ParcelService.updateStatus(id, status, decodedToken);
+    const result = await ParcelService.updateStatus(
+      id,
+      status,
+      note,
+      decodedToken
+    );
     sendResponse(res, {
       success: true,
       statusCode: 201,

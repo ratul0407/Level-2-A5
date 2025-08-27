@@ -28,4 +28,5 @@ export const parcelStatusZod = z.object({
     Status.FAILED_DELIVERY,
     Status.RETURNED,
   ]),
+  note: z.string().max(35),
 });

@@ -13,6 +13,10 @@ const trackingSchema = new Schema<ITracking>(
     },
     updatedBy: { type: String, enum: Object.values(Role), required: true },
     at: Date,
+    note: {
+      type: String,
+      default: "",
+    },
   },
   {
     _id: false,

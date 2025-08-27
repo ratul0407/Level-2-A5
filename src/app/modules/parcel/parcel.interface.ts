@@ -14,6 +14,7 @@ export enum Status {
 }
 export interface ITracking {
   status: Status;
+  note?: string;
   updatedBy: Role;
   at: Date;
 }
