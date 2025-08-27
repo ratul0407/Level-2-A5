@@ -73,6 +73,13 @@ const approveParcel = async (
   if (!isParcelExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "No Parcel found");
   }
+
+  if (isParcelExists.currentStatus === Status.APPROVED) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Parcel has been already approved"
+    );
+  }
   const session = await Parcel.startSession();
   try {
     const driverUser = await User.findById(deliveryDriver);

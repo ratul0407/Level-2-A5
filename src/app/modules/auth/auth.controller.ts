@@ -6,6 +6,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { ITokens, setTokenCookie } from "../../utils/setTokenCookie";
 import httpStatus from "http-status-codes";
 import AppError from "../../errorHelpers/AppError";
+import { envVars } from "../../config/env";
 const credentialsLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await AuthService.credentialsLogin(req.body);
@@ -47,13 +48,13 @@ const logOut = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     res.clearCookie("accessToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
 
     sendResponse(res, {
