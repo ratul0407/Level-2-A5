@@ -13,7 +13,7 @@ export const checkAuth =
     const accessToken = req.cookies.accessToken;
     try {
       if (!accessToken) {
-        throw new AppError(401, "jwt expired");
+        throw new AppError(403, "jwt expired");
       }
 
       const verifiedToken = verifyToken(

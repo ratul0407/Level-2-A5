@@ -10,7 +10,6 @@ export const setTokenCookie = (res: Response, tokenInfo: ITokens) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 60 * 60 * 24,
     });
   }
   if (tokenInfo.refreshToken) {
@@ -18,7 +17,6 @@ export const setTokenCookie = (res: Response, tokenInfo: ITokens) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 60 * 60 * 24 * 10,
     });
   }
 };

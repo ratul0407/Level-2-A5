@@ -27,7 +27,7 @@ const credentialsLogin = catchAsync(
 const getNewAccessToken = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const refreshToken = req?.cookies?.refreshToken;
-    console.log(refreshToken);
+
     if (!refreshToken) {
       throw new AppError(
         httpStatus.BAD_REQUEST,

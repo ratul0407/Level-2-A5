@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Query } from "mongoose";
 import { excludedFields } from "../constants";
 
@@ -18,6 +19,19 @@ export class QueryBuilder<T> {
       delete filter[field];
     }
 
+    if (filter.currentStatus) {
+      if (filter.currentStatus === "ALL") {
+        delete filter.currentStatus; // no filter applied → return all
+      } else if (filter.currentStatus === "NOT_DELIVERED") {
+        // exclude delivered
+        (this.modelQuery as any) = this.modelQuery.find({
+          ...filter,
+          currentStatus: { $ne: "DELIVERED" },
+        });
+        return this;
+      }
+    }
+
     this.modelQuery = this.modelQuery.find(filter); // Tour.find().find(filter)
 
     return this;
@@ -25,7 +39,7 @@ export class QueryBuilder<T> {
 
   search(searchableField: string[]): this {
     const searchTerm = this.query.searchTerm || "";
-    console.log(searchTerm);
+
     const searchQuery = {
       $or: searchableField.map((field) => ({
         [field]: { $regex: searchTerm, $options: "i" },

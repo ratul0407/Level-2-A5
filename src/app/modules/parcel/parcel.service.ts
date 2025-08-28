@@ -211,7 +211,7 @@ const cancelParcel = async (
     ) {
       throw new AppError(
         httpStatus.BAD_REQUEST,
-        "You cannot cancel your parcel now it is already dispatched"
+        "You cannot cancel your parcel at this stage"
       );
     }
   }
