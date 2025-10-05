@@ -5,7 +5,7 @@ import { User } from "../user/user.model";
 const now = new Date();
 const sevenDaysAgo = new Date(now).setDate(now.getDate() - 7);
 const thirtyDaysAgo = new Date();
-thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 90);
 const getParcelStats = async () => {
   const totalParcelsPromise = Parcel.countDocuments({});
   const totalParcelCreatedInLast7DaysPromise = Parcel.countDocuments({
